@@ -8,6 +8,9 @@ export function SiteHeader() {
       <div className="container flex h-16 items-center">
         <Logo isLink={true} />
         <nav className="ml-10 hidden md:flex items-center space-x-6 text-sm font-medium">
+          <Link href="/" className="text-foreground/80 transition-colors hover:text-foreground">
+            Home
+          </Link>
           <Link href="/vehicles" className="text-foreground/80 transition-colors hover:text-foreground">
             Vehicles
           </Link>
