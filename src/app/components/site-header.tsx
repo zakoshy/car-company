@@ -22,9 +22,7 @@ export function SiteHeader() {
           </Link>
         </nav>
         <div className="flex flex-1 items-center justify-end space-x-4">
-          <Button asChild>
-            <Link href="/login">Admin Login</Link>
-          </Button>
+          
         </div>
       </div>
     </header>

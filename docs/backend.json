@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "vehicle": {
+      "title": "Vehicle",
+      "description": "Represents a vehicle in the inventory.",
+      "type": "object",
+      "properties": {
+        "make": { "type": "string" },
+        "model": { "type": "string" },
+        "year": { "type": "number" },
+        "engine": { "type": "string" },
+        "mileage": { "type": "number" },
+        "condition": { "type": "string", "enum": ["New", "Used", "Damaged"] },
+        "price": { "type": "number" },
+        "status": { "type": "string", "enum": ["Incoming", "Available", "Sold"] },
+        "inspectionStatus": { "type": "string", "enum": ["Pending", "Passed", "Failed"] },
+        "arrivalDate": { "type": "string", "format": "date" },
+        "saleDate": { "type": "string", "format": "date" },
+        "buyerDetails": { "type": "string" },
+        "finalPrice": { "type": "number" },
+        "images": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "id": { "type": "string" },
+                    "url": { "type": "string" },
+                    "isFeature": { "type": "boolean" }
+                },
+                "required": ["id", "url", "isFeature"]
+            }
+        }
+      },
+      "required": ["make", "model", "year", "price", "mileage", "status", "inspectionStatus"]
+    }
+  },
+  "auth": {
+    "providers": ["email"]
+  },
+  "firestore": {
+    "/vehicles/{vehicleId}": {
+      "schema": { "$ref": "#/entities/vehicle" },
+      "description": "Collection of all vehicles."
+    }
+  }
+}

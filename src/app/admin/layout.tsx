@@ -14,14 +14,44 @@ import {
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Logo } from "@/app/components/logo";
-import { LayoutDashboard, Car, History, User } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { LayoutDashboard, Car, History, User, LogOut, Loader2 } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import Link from 'next/link';
+import { useUser, useAuth } from "@/firebase";
+import { signOut } from "firebase/auth";
+import { useEffect } from "react";
+import { Button } from "@/components/ui/button";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const user = useUser();
+  const auth = useAuth();
   const avatar = PlaceHolderImages.find((img) => img.id === 'user-avatar');
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    router.push('/login');
+  };
+
+  useEffect(() => {
+    if (user === null) {
+      router.replace('/login');
+    }
+  }, [user, router]);
+
+  if (user === undefined) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+  
+  if (!user) {
+    return null; // or a login redirect, though useEffect handles it
+  }
 
   const navItems = [
     { href: "/admin/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -42,7 +72,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <SidebarMenuItem key={item.href}>
                   <SidebarMenuButton
                     asChild
-                    isActive={pathname === item.href}
+                    isActive={pathname.startsWith(item.href)}
                     tooltip={item.label}
                   >
                     <Link href={item.href}>
@@ -55,19 +85,24 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </SidebarMenu>
           </SidebarContent>
           <SidebarFooter>
-            <div className="flex items-center gap-2">
-              <Avatar className="h-8 w-8">
-                {avatar && <AvatarImage src={avatar.imageUrl} alt="Admin" />}
-                <AvatarFallback>
-                  <User />
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex flex-col group-data-[collapsible=icon]:hidden">
-                <span className="text-sm font-semibold">Admin User</span>
-                <Link href="/" className="text-xs text-muted-foreground hover:underline">
-                  Exit Admin
-                </Link>
+            <div className="flex items-center justify-between w-full">
+              <div className="flex items-center gap-2">
+                <Avatar className="h-8 w-8">
+                  {avatar && <AvatarImage src={user.photoURL || avatar.imageUrl} alt={user.displayName || "Admin"} />}
+                  <AvatarFallback>
+                    <User />
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex flex-col group-data-[collapsible=icon]:hidden">
+                  <span className="text-sm font-semibold">{user.displayName || user.email}</span>
+                   <Link href="/" className="text-xs text-muted-foreground hover:underline">
+                    Exit Admin
+                  </Link>
+                </div>
               </div>
+               <Button variant="ghost" size="icon" onClick={handleLogout} className="group-data-[collapsible=icon]:hidden">
+                  <LogOut className="h-4 w-4" />
+               </Button>
             </div>
           </SidebarFooter>
         </Sidebar>
