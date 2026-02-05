@@ -17,7 +17,7 @@ export function SiteHeader() {
           <Link href="#" className="text-foreground/80 transition-colors hover:text-foreground">
             About
           </Link>
-           <Link href="#" className="text-foreground/80 transition-colors hover:text-foreground">
+           <Link href="/contact" className="text-foreground/80 transition-colors hover:text-foreground">
             Contact
           </Link>
         </nav>
