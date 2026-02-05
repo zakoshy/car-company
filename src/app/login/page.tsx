@@ -12,6 +12,7 @@ import { useAuth, useUser } from "@/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Eye, EyeOff } from "lucide-react";
+import { firebaseConfig } from "@/firebase/config";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -34,6 +35,19 @@ export default function LoginPage() {
     e.preventDefault();
     setError(null);
     setLoading(true);
+
+    if (firebaseConfig.apiKey === "YOUR_API_KEY") {
+      const message = "Firebase is not configured. Please add your project credentials to src/firebase/config.ts";
+      setError(message);
+      toast({
+        title: "Configuration Error",
+        description: message,
+        variant: "destructive",
+      });
+      setLoading(false);
+      return;
+    }
+
     try {
       await signInWithEmailAndPassword(auth, email, password);
       toast({ title: "Login successful!" });
