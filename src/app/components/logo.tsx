@@ -11,7 +11,7 @@ export function Logo({ className, isLink = false }: LogoProps) {
   const content = (
     <>
       <Car className="h-6 w-6 text-primary" />
-      <span className="font-headline text-xl font-semibold">AL-ZIA TRADING CO.LTD</span>
+      <span className="font-headline text-xl font-semibold whitespace-nowrap">AL-ZIA TRADING CO.LTD</span>
     </>
   );
 

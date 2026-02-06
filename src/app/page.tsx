@@ -33,7 +33,7 @@ export default function Home() {
 
         <div className="absolute inset-0 h-full flex flex-col items-center justify-center text-center text-primary-foreground p-4 z-10">
           <h1 className="font-headline text-4xl md:text-6xl lg:text-7xl font-bold drop-shadow-lg">
-            Premium Japanese Vehicles
+            Premium Japanese & Thailand Vehicles
           </h1>
           <p className="mt-4 text-lg md:text-2xl max-w-3xl drop-shadow-md">
             Directly imported for the discerning enthusiast. Quality, reliability, and performance delivered.
