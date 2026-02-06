@@ -27,7 +27,7 @@ const vehicleFormSchema = z.object({
   year: z.coerce.number().int().min(1900, "Invalid year"),
   referenceNumber: z.string().min(1, "Reference number is required"),
   chassisNumber: z.string().min(5, "Chassis number is required."),
-  drivetrain: z.string().min(1, "Drivetrain is required"),
+  drivetrain: z.enum(["4x4", "2WD", "AWD", "FWD", "RWD"]),
   transmission: z.enum(["Automatic", "Manual"]),
   color: z.string().min(1, "Color is required"),
   fuel: z.enum(["Petrol", "Diesel"]),
@@ -65,7 +65,7 @@ export function VehicleForm({ vehicle }: { vehicle?: Vehicle }) {
       year: new Date().getFullYear(),
       referenceNumber: "",
       chassisNumber: "",
-      drivetrain: "",
+      drivetrain: "RWD",
       transmission: "Manual",
       color: "",
       fuel: "Petrol",
@@ -274,9 +274,18 @@ export function VehicleForm({ vehicle }: { vehicle?: Vehicle }) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Drivetrain</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
+                 <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="4x4">4x4</SelectItem>
+                    <SelectItem value="2WD">2WD</SelectItem>
+                    <SelectItem value="AWD">AWD</SelectItem>
+                    <SelectItem value="FWD">FWD</SelectItem>
+                    <SelectItem value="RWD">RWD</SelectItem>
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}
@@ -488,3 +497,5 @@ export function VehicleForm({ vehicle }: { vehicle?: Vehicle }) {
     </Form>
   );
 }
+
+    

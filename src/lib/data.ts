@@ -143,7 +143,7 @@ const vehicles: Vehicle[] = [
     year: 2023,
     referenceNumber: "AZ-23-JM",
     chassisNumber: "JB74-300456",
-    drivetrain: "4WD",
+    drivetrain: "4x4",
     transmission: "Automatic",
     color: "Kinetic Yellow",
     fuel: "Petrol",
@@ -192,3 +192,5 @@ export function getSalespeople() {
 export function getMakes() {
     return makes;
 }
+
+    

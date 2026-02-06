@@ -18,7 +18,7 @@ export type Vehicle = {
   year: number;
   referenceNumber: string;
   chassisNumber: string;
-  drivetrain: string;
+  drivetrain: '4x4' | '2WD' | 'AWD' | 'FWD' | 'RWD';
   transmission: 'Automatic' | 'Manual';
   color: string;
   fuel: 'Petrol' | 'Diesel';
@@ -35,3 +35,5 @@ export type Vehicle = {
   finalPrice?: number;
   salespersonId?: string;
 };
+
+    

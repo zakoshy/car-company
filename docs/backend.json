@@ -10,7 +10,7 @@
         "year": { "type": "number" },
         "referenceNumber": { "type": "string" },
         "chassisNumber": { "type": "string" },
-        "drivetrain": { "type": "string" },
+        "drivetrain": { "type": "string", "enum": ["4x4", "2WD", "AWD", "FWD", "RWD"] },
         "transmission": { "type": "string", "enum": ["Automatic", "Manual"] },
         "color": { "type": "string" },
         "fuel": { "type": "string", "enum": ["Petrol", "Diesel"] },
@@ -66,3 +66,5 @@
     }
   }
 }
+
+    

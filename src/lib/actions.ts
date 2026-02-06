@@ -9,7 +9,7 @@ const vehicleSchema = z.object({
   year: z.coerce.number().int().min(1900).max(new Date().getFullYear() + 1),
   referenceNumber: z.string().min(1, "Reference number is required"),
   chassisNumber: z.string().min(5, "Chassis number must be at least 5 characters."),
-  drivetrain: z.string().min(1, "Drivetrain is required"),
+  drivetrain: z.enum(["4x4", "2WD", "AWD", "FWD", "RWD"]),
   transmission: z.enum(["Automatic", "Manual"]),
   color: z.string().min(1, "Color is required"),
   fuel: z.enum(["Petrol", "Diesel"]),
@@ -100,3 +100,5 @@ export async function deleteSalesperson(id: string) {
     revalidatePath("/admin/salespeople");
     return { message: "Salesperson profile deleted." };
 }
+
+    
