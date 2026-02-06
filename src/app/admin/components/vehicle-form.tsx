@@ -25,7 +25,11 @@ const vehicleFormSchema = z.object({
   make: z.string().min(1, "Make is required"),
   model: z.string().min(1, "Model is required"),
   year: z.coerce.number().int().min(1900, "Invalid year"),
+  referenceNumber: z.string().min(1, "Reference number is required"),
   chassisNumber: z.string().min(5, "Chassis number is required."),
+  drivetrain: z.string().min(1, "Drivetrain is required"),
+  transmission: z.enum(["Automatic", "Manual"]),
+  color: z.string().min(1, "Color is required"),
   fuel: z.enum(["Petrol", "Diesel"]),
   mileage: z.coerce.number().nonnegative("Mileage must be a positive number"),
   condition: z.enum(["New", "Used", "Damaged"]),
@@ -59,7 +63,11 @@ export function VehicleForm({ vehicle }: { vehicle?: Vehicle }) {
       make: "",
       model: "",
       year: new Date().getFullYear(),
+      referenceNumber: "",
       chassisNumber: "",
+      drivetrain: "",
+      transmission: "Manual",
+      color: "",
       fuel: "Petrol",
       mileage: 0,
       condition: "Used",
@@ -223,12 +231,102 @@ export function VehicleForm({ vehicle }: { vehicle?: Vehicle }) {
           />
           <FormField
             control={form.control}
+            name="referenceNumber"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Reference Number</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
             name="chassisNumber"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Chassis Number</FormLabel>
                 <FormControl>
                   <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+           <FormField
+            control={form.control}
+            name="color"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Color</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="drivetrain"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Drivetrain</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+           <FormField
+            control={form.control}
+            name="transmission"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Transmission</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="Manual">Manual</SelectItem>
+                    <SelectItem value="Automatic">Automatic</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+           <FormField
+            control={form.control}
+            name="fuel"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Fuel Type</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="Petrol">Petrol</SelectItem>
+                    <SelectItem value="Diesel">Diesel</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="mileage"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Mileage (km)</FormLabel>
+                <FormControl>
+                  <Input type="number" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -260,38 +358,6 @@ export function VehicleForm({ vehicle }: { vehicle?: Vehicle }) {
                   <SelectContent>
                     <SelectItem value="USD">USD</SelectItem>
                     <SelectItem value="KSh">KSh</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="mileage"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Mileage (km)</FormLabel>
-                <FormControl>
-                  <Input type="number" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="fuel"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Fuel Type</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="Petrol">Petrol</SelectItem>
-                    <SelectItem value="Diesel">Diesel</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />

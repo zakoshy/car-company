@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, GaugeCircle, ShieldCheck, Tag, Car, CircleDollarSign, Fuel, Fingerprint } from "lucide-react";
+import { Calendar, GaugeCircle, ShieldCheck, Tag, Car, CircleDollarSign, Fuel, Fingerprint, Clipboard, Cog, Settings, Palette } from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { formatCurrency } from "@/lib/utils";
 
@@ -20,8 +20,12 @@ export default function VehicleDetailPage({ params }: { params: { id: string } }
 
   const vehicleDetails = [
     { icon: Car, label: "Make & Model", value: `${vehicle.make} ${vehicle.model}` },
+    { icon: Clipboard, label: "Reference No", value: vehicle.referenceNumber },
     { icon: Fingerprint, label: "Chassis No.", value: vehicle.chassisNumber },
     { icon: Calendar, label: "Year", value: vehicle.year },
+    { icon: Palette, label: "Color", value: vehicle.color },
+    { icon: Cog, label: "Drivetrain", value: vehicle.drivetrain },
+    { icon: Settings, label: "Transmission", value: vehicle.transmission },
     { icon: Fuel, label: "Fuel", value: vehicle.fuel },
     { icon: GaugeCircle, label: "Mileage", value: `${vehicle.mileage.toLocaleString()} km` },
     { icon: Tag, label: "Condition", value: vehicle.condition },

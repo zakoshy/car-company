@@ -8,7 +8,11 @@
         "make": { "type": "string" },
         "model": { "type": "string" },
         "year": { "type": "number" },
+        "referenceNumber": { "type": "string" },
         "chassisNumber": { "type": "string" },
+        "drivetrain": { "type": "string" },
+        "transmission": { "type": "string", "enum": ["Automatic", "Manual"] },
+        "color": { "type": "string" },
         "fuel": { "type": "string", "enum": ["Petrol", "Diesel"] },
         "mileage": { "type": "number" },
         "condition": { "type": "string", "enum": ["New", "Used", "Damaged"] },
@@ -34,7 +38,7 @@
             }
         }
       },
-      "required": ["make", "model", "year", "price", "mileage", "status", "inspectionStatus", "chassisNumber", "fuel", "currency"]
+      "required": ["make", "model", "year", "price", "mileage", "status", "inspectionStatus", "chassisNumber", "fuel", "currency", "referenceNumber", "drivetrain", "transmission", "color"]
     },
     "salesperson": {
       "title": "Salesperson",

@@ -16,7 +16,11 @@ export type Vehicle = {
   make: string;
   model: string;
   year: number;
+  referenceNumber: string;
   chassisNumber: string;
+  drivetrain: string;
+  transmission: 'Automatic' | 'Manual';
+  color: string;
   fuel: 'Petrol' | 'Diesel';
   mileage: number;
   condition: 'New' | 'Used' | 'Damaged';
