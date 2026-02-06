@@ -13,6 +13,7 @@ const vehicles: Vehicle[] = [
     transmission: "Manual",
     color: "Bayside Blue",
     fuel: "Petrol",
+    vehicleType: "Coupe",
     mileage: 68000,
     condition: "Used",
     images: [
@@ -35,6 +36,7 @@ const vehicles: Vehicle[] = [
     transmission: "Automatic",
     color: "Renaissance Red",
     fuel: "Petrol",
+    vehicleType: "Coupe",
     mileage: 82000,
     condition: "Used",
     images: [
@@ -57,6 +59,7 @@ const vehicles: Vehicle[] = [
     transmission: "Manual",
     color: "Formula Red",
     fuel: "Petrol",
+    vehicleType: "Coupe",
     mileage: 55000,
     condition: "Used",
     images: [
@@ -79,6 +82,7 @@ const vehicles: Vehicle[] = [
     transmission: "Manual",
     color: "Innocent Blue Mica",
     fuel: "Petrol",
+    vehicleType: "Coupe",
     mileage: 75000,
     condition: "Used",
     images: [
@@ -101,6 +105,7 @@ const vehicles: Vehicle[] = [
     transmission: "Manual",
     color: "World Rally Blue",
     fuel: "Petrol",
+    vehicleType: "Sedan",
     mileage: 110000,
     condition: "Used",
     images: [
@@ -125,6 +130,7 @@ const vehicles: Vehicle[] = [
     transmission: "Manual",
     color: "Canal Blue",
     fuel: "Petrol",
+    vehicleType: "Sedan",
     mileage: 95000,
     condition: "Used",
     images: [
@@ -147,6 +153,7 @@ const vehicles: Vehicle[] = [
     transmission: "Automatic",
     color: "Kinetic Yellow",
     fuel: "Petrol",
+    vehicleType: "SUV",
     mileage: 5000,
     condition: "New",
     images: [
@@ -192,5 +199,3 @@ export function getSalespeople() {
 export function getMakes() {
     return makes;
 }
-
-    

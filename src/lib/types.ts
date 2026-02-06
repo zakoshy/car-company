@@ -11,6 +11,8 @@ export type Salesperson = {
   userId?: string;
 };
 
+export type VehicleType = 'Coupe' | 'Hatchback' | 'Minivan' | 'Sedan' | 'Pickup' | 'SWagon' | 'SUV' | 'TWagon' | 'Truck' | 'Van';
+
 export type Vehicle = {
   id: string;
   make: string;
@@ -22,6 +24,7 @@ export type Vehicle = {
   transmission: 'Automatic' | 'Manual';
   color: string;
   fuel: 'Petrol' | 'Diesel';
+  vehicleType: VehicleType;
   mileage: number;
   condition: 'New' | 'Used' | 'Damaged';
   images: VehicleImage[];
@@ -35,5 +38,3 @@ export type Vehicle = {
   finalPrice?: number;
   salespersonId?: string;
 };
-
-    

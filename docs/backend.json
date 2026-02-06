@@ -14,6 +14,7 @@
         "transmission": { "type": "string", "enum": ["Automatic", "Manual"] },
         "color": { "type": "string" },
         "fuel": { "type": "string", "enum": ["Petrol", "Diesel"] },
+        "vehicleType": { "type": "string", "enum": ["Coupe", "Hatchback", "Minivan", "Sedan", "Pickup", "SWagon", "SUV", "TWagon", "Truck", "Van"] },
         "mileage": { "type": "number" },
         "condition": { "type": "string", "enum": ["New", "Used", "Damaged"] },
         "price": { "type": "number" },
@@ -38,7 +39,7 @@
             }
         }
       },
-      "required": ["make", "model", "year", "price", "mileage", "status", "inspectionStatus", "chassisNumber", "fuel", "currency", "referenceNumber", "drivetrain", "transmission", "color"]
+      "required": ["make", "model", "year", "price", "mileage", "status", "inspectionStatus", "chassisNumber", "fuel", "currency", "referenceNumber", "drivetrain", "transmission", "color", "vehicleType"]
     },
     "salesperson": {
       "title": "Salesperson",
@@ -66,5 +67,3 @@
     }
   }
 }
-
-    

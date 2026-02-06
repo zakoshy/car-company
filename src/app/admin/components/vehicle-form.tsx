@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { Vehicle } from "@/lib/types";
+import type { Vehicle, VehicleType } from "@/lib/types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -21,6 +21,8 @@ import { getMakes } from "@/lib/data";
 import { Form, FormField, FormItem, FormLabel, FormMessage, FormControl } from "@/components/ui/form";
 import { Combobox } from "@/components/ui/combobox";
 
+const vehicleTypes: VehicleType[] = ["Coupe", "Hatchback", "Minivan", "Sedan", "Pickup", "SWagon", "SUV", "TWagon", "Truck", "Van"];
+
 const vehicleFormSchema = z.object({
   make: z.string().min(1, "Make is required"),
   model: z.string().min(1, "Model is required"),
@@ -31,6 +33,7 @@ const vehicleFormSchema = z.object({
   transmission: z.enum(["Automatic", "Manual"]),
   color: z.string().min(1, "Color is required"),
   fuel: z.enum(["Petrol", "Diesel"]),
+  vehicleType: z.enum(["Coupe", "Hatchback", "Minivan", "Sedan", "Pickup", "SWagon", "SUV", "TWagon", "Truck", "Van"]),
   mileage: z.coerce.number().nonnegative("Mileage must be a positive number"),
   condition: z.enum(["New", "Used", "Damaged"]),
   price: z.coerce.number().positive("Price must be a positive number"),
@@ -69,6 +72,7 @@ export function VehicleForm({ vehicle }: { vehicle?: Vehicle }) {
       transmission: "Manual",
       color: "",
       fuel: "Petrol",
+      vehicleType: "Sedan",
       mileage: 0,
       condition: "Used",
       price: 0,
@@ -328,6 +332,26 @@ export function VehicleForm({ vehicle }: { vehicle?: Vehicle }) {
               </FormItem>
             )}
           />
+           <FormField
+            control={form.control}
+            name="vehicleType"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Vehicle Type</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {vehicleTypes.map((type) => (
+                      <SelectItem key={type} value={type}>{type}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <FormField
             control={form.control}
             name="mileage"
@@ -497,5 +521,3 @@ export function VehicleForm({ vehicle }: { vehicle?: Vehicle }) {
     </Form>
   );
 }
-
-    

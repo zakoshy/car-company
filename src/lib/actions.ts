@@ -13,6 +13,7 @@ const vehicleSchema = z.object({
   transmission: z.enum(["Automatic", "Manual"]),
   color: z.string().min(1, "Color is required"),
   fuel: z.enum(["Petrol", "Diesel"]),
+  vehicleType: z.enum(["Coupe", "Hatchback", "Minivan", "Sedan", "Pickup", "SWagon", "SUV", "TWagon", "Truck", "Van"]),
   mileage: z.coerce.number().int().nonnegative("Mileage cannot be negative."),
   condition: z.enum(["New", "Used", "Damaged"]),
   status: z.enum(["Incoming", "Available", "Sold"]),
@@ -100,5 +101,3 @@ export async function deleteSalesperson(id: string) {
     revalidatePath("/admin/salespeople");
     return { message: "Salesperson profile deleted." };
 }
-
-    

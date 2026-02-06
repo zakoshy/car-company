@@ -22,6 +22,7 @@ export default function VehicleDetailPage({ params }: { params: { id: string } }
     { icon: Car, label: "Make & Model", value: `${vehicle.make} ${vehicle.model}` },
     { icon: Clipboard, label: "Reference No", value: vehicle.referenceNumber },
     { icon: Fingerprint, label: "Chassis No.", value: vehicle.chassisNumber },
+    { icon: Car, label: "Vehicle Type", value: vehicle.vehicleType },
     { icon: Calendar, label: "Year", value: vehicle.year },
     { icon: Palette, label: "Color", value: vehicle.color },
     { icon: Cog, label: "Drivetrain", value: vehicle.drivetrain },

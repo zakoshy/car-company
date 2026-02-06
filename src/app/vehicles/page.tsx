@@ -6,18 +6,29 @@ import { VehicleCard } from "@/app/components/vehicle-card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search } from 'lucide-react';
+import type { VehicleType } from '@/lib/types';
 
 export default function VehiclesPage() {
   const allVehicles = getVehicles();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedMake, setSelectedMake] = useState('all');
+  const [selectedFuel, setSelectedFuel] = useState('all');
+  const [selectedType, setSelectedType] = useState('all');
 
   const makes = ['all', ...Array.from(new Set(allVehicles.map(v => v.make)))];
+  const fuelTypes = ['all', 'Petrol', 'Diesel'];
+  const vehicleTypes: ('all' | VehicleType)[] = ['all', 'Coupe', 'Hatchback', 'Minivan', 'Sedan', 'Pickup', 'SWagon', 'SUV', 'TWagon', 'Truck', 'Van'];
 
   const filteredVehicles = allVehicles
     .filter(vehicle => vehicle.status === 'Available')
     .filter(vehicle => 
       selectedMake === 'all' || vehicle.make === selectedMake
+    )
+    .filter(vehicle =>
+      selectedFuel === 'all' || vehicle.fuel === selectedFuel
+    )
+    .filter(vehicle =>
+      selectedType === 'all' || vehicle.vehicleType === selectedType
     )
     .filter(vehicle =>
       `${vehicle.make} ${vehicle.model} ${vehicle.year}`.toLowerCase().includes(searchTerm.toLowerCase())
@@ -32,8 +43,8 @@ export default function VehiclesPage() {
         </p>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-4 mb-8 p-4 bg-card border rounded-lg">
-        <div className="relative flex-grow">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 p-4 bg-card border rounded-lg">
+        <div className="relative flex-grow lg:col-span-2">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
           <Input 
             placeholder="Search by make, model, or year..."
@@ -43,13 +54,37 @@ export default function VehiclesPage() {
           />
         </div>
         <Select value={selectedMake} onValueChange={setSelectedMake}>
-          <SelectTrigger className="w-full md:w-[200px]">
+          <SelectTrigger>
             <SelectValue placeholder="Filter by make" />
           </SelectTrigger>
           <SelectContent>
             {makes.map(make => (
               <SelectItem key={make} value={make}>
                 {make === 'all' ? 'All Makes' : make}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Select value={selectedFuel} onValueChange={setSelectedFuel}>
+          <SelectTrigger>
+            <SelectValue placeholder="Filter by fuel" />
+          </SelectTrigger>
+          <SelectContent>
+            {fuelTypes.map(fuel => (
+              <SelectItem key={fuel} value={fuel}>
+                {fuel === 'all' ? 'All Fuel Types' : fuel}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+         <Select value={selectedType} onValueChange={setSelectedType}>
+          <SelectTrigger className="lg:col-start-4">
+            <SelectValue placeholder="Filter by type" />
+          </SelectTrigger>
+          <SelectContent>
+            {vehicleTypes.map(type => (
+              <SelectItem key={type} value={type}>
+                {type === 'all' ? 'All Vehicle Types' : type}
               </SelectItem>
             ))}
           </SelectContent>
