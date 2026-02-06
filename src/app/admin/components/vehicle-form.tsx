@@ -32,7 +32,7 @@ const vehicleFormSchema = z.object({
   drivetrain: z.enum(["4x4", "2WD", "AWD", "FWD", "RWD"]),
   transmission: z.enum(["Automatic", "Manual"]),
   color: z.string().min(1, "Color is required"),
-  fuel: z.enum(["Petrol", "Diesel"]),
+  fuel: z.enum(["Petrol", "Diesel", "Hybrid", "Electric", "LPG"]),
   vehicleType: z.enum(["Coupe", "Hatchback", "Minivan", "Sedan", "Pickup", "SWagon", "SUV", "TWagon", "Truck", "Van"]),
   mileage: z.coerce.number().nonnegative("Mileage must be a positive number"),
   condition: z.enum(["New", "Used", "Damaged"]),
@@ -326,6 +326,9 @@ export function VehicleForm({ vehicle }: { vehicle?: Vehicle }) {
                   <SelectContent>
                     <SelectItem value="Petrol">Petrol</SelectItem>
                     <SelectItem value="Diesel">Diesel</SelectItem>
+                    <SelectItem value="Hybrid">Hybrid</SelectItem>
+                    <SelectItem value="Electric">Electric</SelectItem>
+                    <SelectItem value="LPG">LPG</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />

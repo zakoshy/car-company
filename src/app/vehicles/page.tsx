@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from 'react';
-import { getVehicles } from "@/lib/data";
+import { getVehicles, getMakes } from "@/lib/data";
 import { VehicleCard } from "@/app/components/vehicle-card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search } from 'lucide-react';
 import type { VehicleType } from '@/lib/types';
+import { Combobox } from '@/components/ui/combobox';
 
 export default function VehiclesPage() {
   const allVehicles = getVehicles();
@@ -15,8 +16,8 @@ export default function VehiclesPage() {
   const [selectedFuel, setSelectedFuel] = useState('all');
   const [selectedType, setSelectedType] = useState('all');
 
-  const makes = ['all', ...Array.from(new Set(allVehicles.map(v => v.make)))];
-  const fuelTypes = ['all', 'Petrol', 'Diesel'];
+  const makes = ['all', ...getMakes()];
+  const fuelTypes = ['all', 'Petrol', 'Diesel', 'Hybrid', 'Electric', 'LPG'];
   const vehicleTypes: ('all' | VehicleType)[] = ['all', 'Coupe', 'Hatchback', 'Minivan', 'Sedan', 'Pickup', 'SWagon', 'SUV', 'TWagon', 'Truck', 'Van'];
 
   const filteredVehicles = allVehicles
@@ -53,18 +54,14 @@ export default function VehiclesPage() {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <Select value={selectedMake} onValueChange={setSelectedMake}>
-          <SelectTrigger>
-            <SelectValue placeholder="Filter by make" />
-          </SelectTrigger>
-          <SelectContent>
-            {makes.map(make => (
-              <SelectItem key={make} value={make}>
-                {make === 'all' ? 'All Makes' : make}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <Combobox
+          options={makes.map(make => ({ value: make, label: make === 'all' ? 'All Makes' : make }))}
+          value={selectedMake}
+          onChange={setSelectedMake}
+          placeholder="Filter by make"
+          searchPlaceholder="Search makes..."
+          emptyText="No make found."
+        />
         <Select value={selectedFuel} onValueChange={setSelectedFuel}>
           <SelectTrigger>
             <SelectValue placeholder="Filter by fuel" />

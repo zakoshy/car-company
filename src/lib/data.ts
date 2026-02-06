@@ -172,16 +172,21 @@ const salespeople: Salesperson[] = [
 ];
 
 const makes = [
-  "Toyota",
-  "Nissan",
-  "Honda",
-  "Mazda",
-  "Subaru",
-  "Mitsubishi",
-  "Suzuki",
-  "Lexus",
   "Acura",
+  "BMW",
+  "Honda",
   "Infiniti",
+  "Isuzu",
+  "Land Rover",
+  "Lexus",
+  "Mazda",
+  "Mitsubishi",
+  "Nissan",
+  "Peugeot",
+  "Subaru",
+  "Suzuki",
+  "Toyota",
+  "Volkswagen",
 ];
 
 export function getVehicles() {

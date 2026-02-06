@@ -23,7 +23,7 @@ export type Vehicle = {
   drivetrain: '4x4' | '2WD' | 'AWD' | 'FWD' | 'RWD';
   transmission: 'Automatic' | 'Manual';
   color: string;
-  fuel: 'Petrol' | 'Diesel';
+  fuel: 'Petrol' | 'Diesel' | 'Hybrid' | 'Electric' | 'LPG';
   vehicleType: VehicleType;
   mileage: number;
   condition: 'New' | 'Used' | 'Damaged';
