@@ -39,7 +39,7 @@ export default function Home() {
                     alt={image.description}
                     fill
                     className="object-cover"
-                    priority={image.id === 'hero'}
+                    priority={true}
                     data-ai-hint={image.imageHint}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent" />

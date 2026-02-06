@@ -1,22 +1,40 @@
 {
   "placeholderImages": [
     {
-      "id": "hero",
-      "description": "A wide shot of a modern sports car on a city street at night.",
-      "imageUrl": "https://images.unsplash.com/photo-1707399720697-b1d1502fac58?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxzcG9ydHMlMjBjYXJ8ZW58MHx8fHwxNzcwMjc3MjYxfDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "sports car"
+      "id": "hero-nissan",
+      "description": "A sleek Nissan GT-R on a city road.",
+      "imageUrl": "https://images.unsplash.com/photo-1617083999138-b6493c48975a?q=80&w=2070&auto=format&fit=crop",
+      "imageHint": "nissan gtr"
     },
     {
-      "id": "hero-2",
-      "description": "A silver sports car on a winding road.",
-      "imageUrl": "https://images.unsplash.com/photo-1553440569-bcc63803a840?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxzcG9ydHMlMjBjYXJ8ZW58MHx8fHwxNzcwMjc3MjYxfDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "silver car"
+      "id": "hero-toyota",
+      "description": "A vibrant red Toyota Supra in motion.",
+      "imageUrl": "https://images.unsplash.com/photo-1583121274602-3e2820c69888?q=80&w=2070&auto=format&fit=crop",
+      "imageHint": "toyota supra"
     },
     {
-      "id": "hero-3",
-      "description": "A blue luxury car at sunset.",
-      "imageUrl": "https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjYXJ8ZW58MHx8fHwxNzcxMDYwMDU4fDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "blue car"
+      "id": "hero-suzuki",
+      "description": "A compact and sporty Suzuki Swift.",
+      "imageUrl": "https://images.unsplash.com/photo-1628434200353-859fc8884a22?q=80&w=2070&auto=format&fit=crop",
+      "imageHint": "suzuki swift"
+    },
+    {
+      "id": "hero-audi",
+      "description": "A futuristic Audi R8 sports car.",
+      "imageUrl": "https://images.unsplash.com/photo-1600722026769-07c870a44811?q=80&w=2070&auto=format&fit=crop",
+      "imageHint": "audi r8"
+    },
+    {
+      "id": "hero-mercedes",
+      "description": "A luxury silver Mercedes-Benz AMG GT.",
+      "imageUrl": "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=2070&auto=format&fit=crop",
+      "imageHint": "mercedes amg"
+    },
+    {
+      "id": "hero-subaru",
+      "description": "A blue Subaru WRX rally car.",
+      "imageUrl": "https://images.unsplash.com/photo-1619405399517-d7fce0f13302?q=80&w=1925&auto=format&fit=crop",
+      "imageHint": "subaru wrx"
     },
     {
       "id": "car-1-1",
