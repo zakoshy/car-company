@@ -11,7 +11,7 @@ import Link from 'next/link';
 
 export default function ContactPage() {
   const googleMapsUrl =
-    'https://www.google.com/maps/dir/?api=1&destination=-4.045591,39.683416';
+    'https://www.google.com/maps/dir/?api=1&destination=AL+ZIA+Car+Sales,Moi+Avenue,Mombasa,Kenya';
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">
@@ -36,7 +36,7 @@ export default function ContactPage() {
               <div>
                 <h3 className="font-semibold">Our Location</h3>
                 <p className="text-muted-foreground">
-                  Autozone Motors, Links Rd, Mombasa, Kenya
+                  Opposite NCBA Bank, Moi Avenue, Mombasa, Kenya
                 </p>
               </div>
             </div>
@@ -92,14 +92,14 @@ export default function ContactPage() {
           <CardContent>
             <div className="aspect-video w-full rounded-lg overflow-hidden border">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3979.882453835698!2d39.6808410758454!3d-4.045585645511046!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1840129202598c97%3A0x46821361a8c38725!2sAutozone%20Motors!5e0!3m2!1sen!2ske!4v1721308365313!5m2!1sen!2ske"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3979.8499955437513!2d39.66166567584547!3d-4.058866945415841!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x184012e457512c4f%3A0xe7260761e16f1a8!2sAl-Zia%20Motors%20Ltd!5e0!3m2!1sen!2ske!4v1721389812123!5m2!1sen!2ske"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
                 allowFullScreen={true}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                title="Autozone Motors Location"
+                title="AL ZIA Car Sales Location"
               ></iframe>
             </div>
           </CardContent>
