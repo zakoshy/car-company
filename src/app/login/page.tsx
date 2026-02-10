@@ -12,7 +12,6 @@ import { useAuth, useUser } from "@/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Eye, EyeOff } from "lucide-react";
-import { firebaseConfig } from "@/firebase/config";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -26,6 +25,7 @@ export default function LoginPage() {
   const { toast } = useToast();
 
   useEffect(() => {
+    // If there's a real logged-in user, redirect them.
     if (user) {
       router.push("/admin/dashboard");
     }
@@ -36,18 +36,27 @@ export default function LoginPage() {
     setError(null);
     setLoading(true);
 
+    // If Firebase is not configured, run in "demo mode".
     if (!auth) {
-      const message = "Firebase is not configured. Please check your environment variables.";
-      setError(message);
-      toast({
-        title: "Configuration Error",
-        description: message,
-        variant: "destructive",
-      });
+      // Simulate a login for demo purposes
+      if (email === 'admin@example.com' && password === 'password') {
+        toast({ title: "Login successful! (Demo Mode)" });
+        // In demo mode, we can't create a real user session, so we just navigate.
+        router.push("/admin/dashboard");
+      } else {
+        const message = "Invalid credentials. For demo, use admin@example.com and password.";
+        setError(message);
+        toast({
+          title: "Login Failed",
+          description: "Invalid credentials for demo mode.",
+          variant: "destructive",
+        });
+      }
       setLoading(false);
       return;
     }
 
+    // If Firebase is configured, perform a real login.
     try {
       await signInWithEmailAndPassword(auth, email, password);
       toast({ title: "Login successful!" });
@@ -68,6 +77,8 @@ export default function LoginPage() {
     }
   };
 
+  // While checking for a real user, show a loader.
+  // Or if a user is found, we wait for the redirect.
   if (user === undefined || user) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-secondary">
@@ -76,13 +87,18 @@ export default function LoginPage() {
     );
   }
 
+  // If no user, show the login form.
   return (
     <div className="flex items-center justify-center min-h-screen bg-secondary">
       <Card className="mx-auto max-w-sm w-full">
         <CardHeader className="text-center">
           <Logo className="mb-4 justify-center" />
           <CardTitle className="font-headline text-2xl">Admin Login</CardTitle>
-          <CardDescription>Enter your credentials to access the dashboard</CardDescription>
+          <CardDescription>
+            Enter credentials to access the dashboard
+            <br />
+            <span className="text-xs text-muted-foreground/80">(Demo: admin@example.com / password)</span>
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="grid gap-4">
