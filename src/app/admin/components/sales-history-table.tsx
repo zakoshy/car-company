@@ -10,6 +10,7 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatCurrency } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
+import { format } from "date-fns";
 
 export function SalesHistoryTable({ vehicles, isLoading }: { vehicles: Pick<Vehicle, 'id' | 'make' | 'model' | 'year' | 'saleDate' | 'buyerDetails' | 'finalPrice' | 'currency'>[], isLoading: boolean }) {
 
@@ -63,7 +64,9 @@ export function SalesHistoryTable({ vehicles, isLoading }: { vehicles: Pick<Vehi
                   <div>{vehicle.year} {vehicle.make}</div>
                   <div className="text-sm text-muted-foreground">{vehicle.model}</div>
                 </TableCell>
-                <TableCell className="hidden md:table-cell">{vehicle.saleDate}</TableCell>
+                <TableCell className="hidden md:table-cell">
+                  {vehicle.saleDate ? format(typeof (vehicle.saleDate as any).toDate === 'function' ? (vehicle.saleDate as any).toDate() : new Date(vehicle.saleDate as string), 'PPP') : 'N/A'}
+                </TableCell>
                 <TableCell className="hidden lg:table-cell">{vehicle.buyerDetails}</TableCell>
                 <TableCell className="text-right">{formatCurrency(vehicle.finalPrice || 0, vehicle.currency)}</TableCell>
               </TableRow>

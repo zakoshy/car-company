@@ -58,7 +58,7 @@ export default function DashboardPage() {
     sold.forEach(v => {
         if (v.saleDate) {
             try {
-                const saleDate = new Date(v.saleDate);
+                const saleDate = typeof (v.saleDate as any).toDate === 'function' ? (v.saleDate as any).toDate() : new Date(v.saleDate as string);
                 const monthIndex = saleDate.getMonth();
                 if(monthlySales[monthIndex]) {
                   monthlySales[monthIndex].sales += 1;
