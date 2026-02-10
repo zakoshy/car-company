@@ -54,7 +54,7 @@ export default function VehiclesPage() {
     }
     if (debouncedSearchTerm) {
       vehicles = vehicles.filter((vehicle) =>
-        `${vehicle.make} ${vehicle.model} ${vehicle.year}`
+        `${vehicle.make} ${vehicle.model} ${vehicle.year} ${vehicle.referenceNumber} ${vehicle.chassisNumber}`
           .toLowerCase()
           .includes(debouncedSearchTerm.toLowerCase())
       );
@@ -78,7 +78,7 @@ export default function VehiclesPage() {
         <div className="relative flex-grow lg:col-span-2">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
           <Input
-            placeholder="Search by make, model, or year..."
+            placeholder="Search by make, model, year, ref, chassis..."
             className="pl-10"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
