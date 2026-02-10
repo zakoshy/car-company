@@ -75,6 +75,29 @@ export default function ContactPage() {
             </CardContent>
         </Card>
       </div>
+
+      <div className="mt-8 max-w-4xl mx-auto">
+        <Card>
+          <CardHeader>
+            <CardTitle>Find Us On The Map</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="aspect-video w-full rounded-lg overflow-hidden border">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3979.835439501582!2d39.6617006758455!3d-4.060193845424581!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x18401319401730d1%3A0x8e8a798482d1c37b!2sAirtel%20Express!5e0!3m2!1sen!2ske!4v1716473121193!5m2!1sen!2ske"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen={true}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="AL-ZIA TRADING CO. LTD Location"
+              ></iframe>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
     </div>
   );
 }
