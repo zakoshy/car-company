@@ -1,21 +1,27 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Logo } from "@/app/components/logo";
-import { useAuth, useUser } from "@/firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { useToast } from "@/hooks/use-toast";
-import { Loader2, Eye, EyeOff } from "lucide-react";
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Logo } from '@/app/components/logo';
+import { useAuth, useUser } from '@/firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useToast } from '@/hooks/use-toast';
+import { Loader2, Eye, EyeOff } from 'lucide-react';
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -27,7 +33,7 @@ export default function LoginPage() {
   useEffect(() => {
     // If there's a real logged-in user, redirect them.
     if (user) {
-      router.push("/admin/dashboard");
+      router.push('/admin/dashboard');
     }
   }, [user, router]);
 
@@ -40,16 +46,17 @@ export default function LoginPage() {
     if (!auth) {
       // Simulate a login for demo purposes
       if (email === 'admin@example.com' && password === 'password') {
-        toast({ title: "Login successful! (Demo Mode)" });
+        toast({ title: 'Login successful! (Demo Mode)' });
         // In demo mode, we can't create a real user session, so we just navigate.
-        router.push("/admin/dashboard");
+        router.push('/admin/dashboard');
       } else {
-        const message = "Invalid credentials. For demo, use admin@example.com and password.";
+        const message =
+          'Invalid credentials. For demo, use admin@example.com and password.';
         setError(message);
         toast({
-          title: "Login Failed",
-          description: "Invalid credentials for demo mode.",
-          variant: "destructive",
+          title: 'Login Failed',
+          description: 'Invalid credentials for demo mode.',
+          variant: 'destructive',
         });
       }
       setLoading(false);
@@ -59,18 +66,27 @@ export default function LoginPage() {
     // If Firebase is configured, perform a real login.
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      toast({ title: "Login successful!" });
-      router.push("/admin/dashboard");
+      toast({ title: 'Login successful!' });
+      router.push('/admin/dashboard');
     } catch (err: any) {
-      let message = "An unknown error occurred.";
-      if (err.code === 'auth/invalid-credential' || err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
-        message = "Invalid credentials. Please check your email and password.";
+      let message = 'An unknown error occurred during login.';
+
+      // The 'auth/invalid-credential' error is intentionally vague in modern Firebase SDKs
+      // to prevent user enumeration attacks.
+      if (err.code === 'auth/invalid-credential') {
+        message =
+          'Invalid credentials. Please check your email and password. Also, ensure the Email/Password sign-in method is enabled in your Firebase console.';
+      } else if (err.code) {
+        // Log the specific code for debugging if it's not the generic one
+        console.error('Firebase Auth Error Code:', err.code);
+        message = `Login failed. Please try again. (Error: ${err.code})`;
       }
+
       setError(message);
       toast({
-        title: "Login Failed",
+        title: 'Login Failed',
         description: message,
-        variant: "destructive",
+        variant: 'destructive',
       });
     } finally {
       setLoading(false);
@@ -82,7 +98,7 @@ export default function LoginPage() {
   if (user === undefined || user) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-secondary">
-         <Loader2 className="h-8 w-8 animate-spin" />
+        <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
   }
@@ -97,7 +113,9 @@ export default function LoginPage() {
           <CardDescription>
             Enter credentials to access the dashboard
             <br />
-            <span className="text-xs text-muted-foreground/80">(Demo: admin@example.com / password)</span>
+            <span className="text-xs text-muted-foreground/80">
+              (Demo: admin@example.com / password)
+            </span>
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -118,7 +136,7 @@ export default function LoginPage() {
               <div className="relative">
                 <Input
                   id="password"
-                  type={showPassword ? "text" : "password"}
+                  type={showPassword ? 'text' : 'password'}
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -127,7 +145,7 @@ export default function LoginPage() {
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground"
-                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? (
                     <EyeOff className="h-4 w-4" />
@@ -138,12 +156,23 @@ export default function LoginPage() {
               </div>
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Login"}
+              {loading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                'Login'
+              )}
             </Button>
-            {error && <p className="text-sm text-center text-destructive pt-2">{error}</p>}
+            {error && (
+              <p className="text-sm text-center text-destructive pt-2">
+                {error}
+              </p>
+            )}
           </form>
           <div className="mt-4 text-center text-sm">
-            <Link href="/" className="underline text-muted-foreground hover:text-primary">
+            <Link
+              href="/"
+              className="underline text-muted-foreground hover:text-primary"
+            >
               Return to main site
             </Link>
           </div>
