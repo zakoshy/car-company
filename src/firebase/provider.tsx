@@ -33,9 +33,9 @@ export function FirebaseProvider({
 
 export const useFirebase = () => {
   const context = useContext(FirebaseContext);
-  if (!context) {
-    throw new Error("useFirebase must be used within a FirebaseProvider.");
-  }
+  // Do not throw an error here.
+  // Components that use this hook should handle the null case.
+  // This allows for server-side rendering without Firebase.
   return context;
 };
 
