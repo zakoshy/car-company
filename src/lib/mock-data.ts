@@ -150,7 +150,7 @@ export const mockVehicles: Vehicle[] = [
     status: 'Available',
     inspectionStatus: 'Passed',
     images: [
-      { id: 'img-6-1', url: 'https://images.unsplash.com/photo-1629587239634-2a626c7a61f2?q=80&w=2070&auto=format&fit=crop', isFeature: true },
+      { id: 'img-6-1', url: getImage('car-vw-golf')?.imageUrl || '', isFeature: true },
     ]
   },
   {
@@ -197,7 +197,7 @@ export const mockVehicles: Vehicle[] = [
     status: 'Available',
     inspectionStatus: 'Passed',
     images: [
-      { id: 'img-8-1', url: 'https://images.unsplash.com/photo-1617469767053-13b318a8f7e2?q=80&w=2070&auto=format&fit=crop', isFeature: true },
+      { id: 'img-8-1', url: getImage('car-mazda-cx5')?.imageUrl || '', isFeature: true },
     ]
   },
   {
@@ -241,7 +241,7 @@ export const mockVehicles: Vehicle[] = [
     status: 'Available',
     inspectionStatus: 'Passed',
     images: [
-      { id: 'img-10-1', url: 'https://images.unsplash.com/photo-1603584848380-5ac937d324c4?q=80&w=2070&auto=format&fit=crop', isFeature: true },
+      { id: 'img-10-1', url: getImage('car-mitsubishi-pajero')?.imageUrl || '', isFeature: true },
     ]
   },
   {
@@ -263,7 +263,7 @@ export const mockVehicles: Vehicle[] = [
     status: 'Available',
     inspectionStatus: 'Passed',
     images: [
-      { id: 'img-11-1', url: 'https://images.unsplash.com/photo-1631728362630-363e1a81d638?q=80&w=1974&auto=format&fit=crop', isFeature: true },
+      { id: 'img-11-1', url: getImage('car-isuzu-dmax')?.imageUrl || '', isFeature: true },
     ]
   },
   {
@@ -288,7 +288,7 @@ export const mockVehicles: Vehicle[] = [
     buyerDetails: 'Alice Wonderland',
     finalPrice: 84000,
     images: [
-      { id: 'img-12-1', url: 'https://images.unsplash.com/photo-1677643323343-539c4d92d194?q=80&w=2070&auto=format&fit=crop', isFeature: true },
+      { id: 'img-12-1', url: getImage('car-landrover-defender')?.imageUrl || '', isFeature: true },
     ]
   }
 ];

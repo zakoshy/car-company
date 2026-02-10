@@ -97,6 +97,36 @@
       "imageHint": "white van"
     },
     {
+      "id": "car-vw-golf",
+      "description": "A blue VW Golf R hatchback.",
+      "imageUrl": "https://images.unsplash.com/photo-1629587239634-2a626c7a61f2?q=80&w=2070&auto=format&fit=crop",
+      "imageHint": "vw golf"
+    },
+    {
+      "id": "car-mazda-cx5",
+      "description": "A red Mazda CX-5 SUV.",
+      "imageUrl": "https://images.unsplash.com/photo-1617469767053-13b318a8f7e2?q=80&w=2070&auto=format&fit=crop",
+      "imageHint": "mazda suv"
+    },
+    {
+      "id": "car-mitsubishi-pajero",
+      "description": "A silver Mitsubishi Pajero SUV off-road.",
+      "imageUrl": "https://images.unsplash.com/photo-1603584848380-5ac937d324c4?q=80&w=2070&auto=format&fit=crop",
+      "imageHint": "mitsubishi pajero"
+    },
+    {
+      "id": "car-isuzu-dmax",
+      "description": "A grey Isuzu D-Max pickup truck.",
+      "imageUrl": "https://images.unsplash.com/photo-1631728362630-363e1a81d638?q=80&w=1974&auto=format&fit=crop",
+      "imageHint": "isuzu pickup"
+    },
+    {
+      "id": "car-landrover-defender",
+      "description": "A green Land Rover Defender in the wild.",
+      "imageUrl": "https://images.unsplash.com/photo-1677643323343-539c4d92d194?q=80&w=2070&auto=format&fit=crop",
+      "imageHint": "land rover"
+    },
+    {
       "id": "user-avatar",
       "description": "Placeholder for user avatar.",
       "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwZXJzb24lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NzAyNDg3MTN8MA&ixlib=rb-4.1.0&q=80&w=1080",
