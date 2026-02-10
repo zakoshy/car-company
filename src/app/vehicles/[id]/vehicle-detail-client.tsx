@@ -1,7 +1,9 @@
 'use client';
 
+import { useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -18,6 +20,7 @@ import {
   Cog,
   Settings,
   Palette,
+  Loader2,
 } from 'lucide-react';
 import {
   Carousel,
@@ -28,9 +31,41 @@ import {
 } from '@/components/ui/carousel';
 import { formatCurrency } from '@/lib/utils';
 import type { Vehicle } from '@/lib/types';
+import { useDoc, useFirestore } from '@/firebase';
+import { doc } from 'firebase/firestore';
+import { Skeleton } from '@/components/ui/skeleton';
 
+export function VehicleDetailClient({ vehicleId }: { vehicleId: string }) {
+  const db = useFirestore();
 
-export function VehicleDetailClient({ vehicle }: { vehicle: Vehicle }) {
+  const vehicleRef = useMemo(
+    () => (db ? doc(db, 'vehicles', vehicleId) : null),
+    [db, vehicleId]
+  );
+  
+  const { data: vehicle, loading, error } = useDoc<Vehicle>(vehicleRef);
+
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-8 md:py-12">
+        <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
+          <Skeleton className="aspect-[4/3] w-full" />
+          <div className="space-y-4">
+            <Skeleton className="h-6 w-24" />
+            <Skeleton className="h-12 w-3/4" />
+            <Skeleton className="h-8 w-1/2" />
+            <Skeleton className="h-48 w-full" />
+            <Skeleton className="h-12 w-full" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !vehicle) {
+    notFound();
+  }
+
   const galleryImages = vehicle.images?.length > 0 ? vehicle.images : [];
 
   const vehicleDetails = [

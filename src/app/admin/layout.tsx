@@ -31,7 +31,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const auth = useAuth();
   const avatar = PlaceHolderImages.find((img) => img.id === 'user-avatar');
 
-  const [isAuthorized, setIsAuthorized] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -40,11 +39,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       return;
     }
 
-    const demoSessionActive = sessionStorage.getItem('demo-admin-logged-in') === 'true';
-
-    if (user || demoSessionActive) {
-      setIsAuthorized(true);
-    } else {
+    if (!user) {
       router.replace('/login');
     }
     
@@ -55,28 +50,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     if (auth) {
       await signOut(auth);
     }
-    sessionStorage.removeItem('demo-admin-logged-in');
     router.push('/login');
   };
 
-  if (isLoading) {
+  if (isLoading || !user) {
     return (
       <div className="flex h-screen items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
   }
-  
-  if (!isAuthorized) {
-    return null; // Redirect is handled in useEffect
-  }
-  
-  // Create a display user object for both real and demo sessions
-  const displayUser = user || {
-      displayName: 'Demo Admin',
-      email: 'admin@example.com',
-      photoURL: avatar?.imageUrl,
-  };
 
   const navItems = [
     { href: "/admin/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -115,13 +98,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <div className="flex items-center justify-between w-full">
               <Link href="/admin/profile" className="flex items-center gap-2">
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src={displayUser.photoURL || avatar?.imageUrl} alt={displayUser.displayName || "Admin"} />
+                  <AvatarImage src={user.photoURL || avatar?.imageUrl} alt={user.displayName || "Admin"} />
                   <AvatarFallback>
                     <User />
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col group-data-[collapsible=icon]:hidden">
-                  <span className="text-sm font-semibold">{displayUser.displayName || displayUser.email}</span>
+                  <span className="text-sm font-semibold">{user.displayName || user.email}</span>
                    <span className="text-xs text-muted-foreground hover:underline">
                     View Profile
                   </span>

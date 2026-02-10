@@ -32,17 +32,22 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import { deleteSalesperson } from '@/lib/mutations';
+import { useFirestore } from '@/firebase';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export function SalespeopleTable({
   salespeople,
+  isLoading,
 }: {
   salespeople: Salesperson[];
+  isLoading: boolean;
 }) {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedSalesperson, setSelectedSalesperson] =
     useState<Salesperson | null>(null);
   const { toast } = useToast();
   const router = useRouter();
+  const db = useFirestore();
 
   const handleDeleteClick = (salesperson: Salesperson) => {
     setSelectedSalesperson(salesperson);
@@ -50,17 +55,28 @@ export function SalespeopleTable({
   };
 
   const handleConfirmDelete = async () => {
-    if (!selectedSalesperson) return;
+    if (!selectedSalesperson || !db) return;
     
-    await deleteSalesperson(selectedSalesperson.id);
+    await deleteSalesperson(db, selectedSalesperson.id);
     toast({
-      title: 'Salesperson Removed (Demo)',
+      title: 'Salesperson Removed',
       description: `${selectedSalesperson.name} has been removed.`,
     });
     router.refresh();
     setIsDeleteDialogOpen(false);
     setSelectedSalesperson(null);
   };
+  
+  if (isLoading) {
+     return (
+       <div className="border rounded-lg p-4">
+        <div className="space-y-4">
+          <Skeleton className="h-12 w-full" />
+          <Skeleton className="h-12 w-full" />
+        </div>
+       </div>
+     )
+  }
 
   if (salespeople.length === 0) {
     return (

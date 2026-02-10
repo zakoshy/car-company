@@ -36,12 +36,28 @@ import { cn, formatCurrency } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import { deleteVehicle } from '@/lib/mutations';
+import { useFirestore } from '@/firebase';
+import { Skeleton } from '@/components/ui/skeleton';
 
-export function VehicleTable({ vehicles }: { vehicles: Vehicle[] }) {
+export function VehicleTable({ vehicles, isLoading }: { vehicles: Vehicle[], isLoading: boolean }) {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
   const { toast } = useToast();
   const router = useRouter();
+  const db = useFirestore();
+
+  if (isLoading) {
+     return (
+       <div className="border rounded-lg p-4">
+        <div className="space-y-4">
+          <Skeleton className="h-12 w-full" />
+          <Skeleton className="h-12 w-full" />
+          <Skeleton className="h-12 w-full" />
+          <Skeleton className="h-12 w-full" />
+        </div>
+       </div>
+     )
+  }
 
   if (vehicles.length === 0) {
     return (
@@ -60,14 +76,14 @@ export function VehicleTable({ vehicles }: { vehicles: Vehicle[] }) {
   };
 
   const handleConfirmDelete = async () => {
-    if (!selectedVehicle) return;
+    if (!selectedVehicle || !db) return;
 
-    await deleteVehicle(selectedVehicle.id);
+    await deleteVehicle(db, selectedVehicle.id);
     toast({
-      title: 'Vehicle Deleted (Demo)',
+      title: 'Vehicle Deleted',
       description: `${selectedVehicle.year} ${selectedVehicle.make} ${selectedVehicle.model} has been removed.`,
     });
-    router.refresh(); // In a real app with state management, this might update the state.
+    router.refresh();
     setIsDeleteDialogOpen(false);
     setSelectedVehicle(null);
   };

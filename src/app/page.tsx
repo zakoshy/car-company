@@ -2,18 +2,31 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { VehicleCard } from '@/app/components/vehicle-card';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { ArrowRight } from 'lucide-react';
-import { mockVehicles } from '@/lib/mock-data';
+import { useCollection, useFirestore } from '@/firebase';
+import type { Vehicle } from '@/lib/types';
+import { collection, query, where, limit } from 'firebase/firestore';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function Home() {
-  const featuredVehicles = mockVehicles
-    .filter((v) => v.status === 'Available')
-    .slice(0, 3);
-
   const heroImage = PlaceHolderImages.find((p) => p.id === 'hero-mercedes');
+  const db = useFirestore();
+
+  const featuredQuery = useMemo(() => {
+    if (!db) return null;
+    return query(
+      collection(db, 'vehicles'),
+      where('status', '==', 'Available'),
+      limit(3)
+    );
+  }, [db]);
+
+  const { data: featuredVehicles, loading } = useCollection<Vehicle>(featuredQuery);
+  const vehicles = featuredVehicles || [];
 
   return (
     <div className="flex flex-col">
@@ -58,9 +71,15 @@ export default function Home() {
             of JDM culture.
           </p>
           <div className="mt-10">
-            {featuredVehicles.length > 0 ? (
+            {loading ? (
+                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <Skeleton className="h-96 w-full" />
+                    <Skeleton className="h-96 w-full" />
+                    <Skeleton className="h-96 w-full" />
+                 </div>
+            ) : vehicles.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {featuredVehicles.map((vehicle) => (
+                {vehicles.map((vehicle) => (
                   <VehicleCard key={vehicle.id} vehicle={vehicle} />
                 ))}
               </div>

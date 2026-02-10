@@ -65,7 +65,6 @@ export default function LoginPage() {
   const isLoading = emailLoading || googleLoading;
 
   useEffect(() => {
-    // If there's a real logged-in user, redirect them.
     if (user) {
       router.push('/admin/dashboard');
     }
@@ -74,30 +73,18 @@ export default function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    setEmailLoading(true);
-
-    // If Firebase is not configured, run in "demo mode".
+    
     if (!auth) {
-      // Simulate a login for demo purposes
-      if (email === 'admin@example.com' && password === 'password') {
-        toast({ title: 'Login successful! (Demo Mode)' });
-        sessionStorage.setItem('demo-admin-logged-in', 'true');
-        router.push('/admin/dashboard');
-      } else {
-        const message =
-          'Invalid credentials. For demo, use admin@example.com and password.';
-        setError(message);
-        toast({
-          title: 'Login Failed',
-          description: 'Invalid credentials for demo mode.',
-          variant: 'destructive',
-        });
-      }
-      setEmailLoading(false);
+      toast({
+        title: 'Firebase Not Configured',
+        description: 'Please add your Firebase credentials to the .env file.',
+        variant: 'destructive',
+      });
       return;
     }
+    
+    setEmailLoading(true);
 
-    // If Firebase is configured, perform a real login.
     try {
       await signInWithEmailAndPassword(auth, email, password);
       toast({ title: 'Login successful!' });
@@ -126,17 +113,17 @@ export default function LoginPage() {
 
   const handleGoogleLogin = async () => {
     setError(null);
-    setGoogleLoading(true);
 
     if (!auth) {
       toast({
-        title: 'Demo Mode',
-        description: 'Google sign-in is not available in demo mode.',
+        title: 'Firebase Not Configured',
+        description: 'Google sign-in is not available.',
         variant: 'destructive',
       });
-      setGoogleLoading(false);
       return;
     }
+    
+    setGoogleLoading(true);
 
     try {
       const provider = new GoogleAuthProvider();
@@ -163,8 +150,6 @@ export default function LoginPage() {
     }
   };
 
-  // While checking for a real user, show a loader.
-  // Or if a user is found, we wait for the redirect.
   if (user === undefined || user) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-secondary">
@@ -173,7 +158,6 @@ export default function LoginPage() {
     );
   }
 
-  // If no user, show the login form.
   return (
     <div className="flex items-center justify-center min-h-screen bg-secondary">
       <Card className="mx-auto max-w-sm w-full">
@@ -182,10 +166,6 @@ export default function LoginPage() {
           <CardTitle className="font-headline text-2xl">Admin Login</CardTitle>
           <CardDescription>
             Enter credentials to access the dashboard
-            <br />
-            <span className="text-xs text-muted-foreground/80">
-              (Demo: admin@example.com / password)
-            </span>
           </CardDescription>
         </CardHeader>
         <CardContent>

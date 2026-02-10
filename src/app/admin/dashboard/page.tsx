@@ -15,15 +15,18 @@ import {
 } from '@/components/ui/chart';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer } from 'recharts';
 import { Car, DollarSign, PackageCheck, PackageOpen } from 'lucide-react';
-import { mockVehicles } from '@/lib/mock-data';
+import { useCollection, useFirestore } from '@/firebase';
+import type { Vehicle } from '@/lib/types';
+import { collection } from 'firebase/firestore';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const chartData = [
-  { month: 'January', sales: 186 },
-  { month: 'February', sales: 305 },
-  { month: 'March', sales: 237 },
-  { month: 'April', sales: 73 },
-  { month: 'May', sales: 209 },
-  { month: 'June', sales: 214 },
+  { month: 'January', sales: 0 },
+  { month: 'February', sales: 0 },
+  { month: 'March', sales: 0 },
+  { month: 'April', sales: 0 },
+  { month: 'May', sales: 0 },
+  { month: 'June', sales: 0 },
 ];
 
 const chartConfig = {
@@ -34,20 +37,47 @@ const chartConfig = {
 };
 
 export default function DashboardPage() {
+  const db = useFirestore();
+  const { data: vehicles, loading } = useCollection<Vehicle>(
+    db ? collection(db, 'vehicles') : null
+  );
+
   const {
     totalRevenue,
     availableVehicles,
     soldVehicles,
     incomingVehicles,
+    salesByMonth
   } = useMemo(() => {
-    const sold = mockVehicles.filter((v) => v.status === 'Sold' && v.finalPrice);
+    if (!vehicles) {
+      return { totalRevenue: 0, availableVehicles: 0, soldVehicles: 0, incomingVehicles: 0, salesByMonth: chartData };
+    }
+    
+    const sold = vehicles.filter((v) => v.status === 'Sold' && v.finalPrice);
+    
+    const monthlySales = [...chartData];
+    sold.forEach(v => {
+        if (v.saleDate) {
+            try {
+                const saleDate = new Date(v.saleDate);
+                const monthIndex = saleDate.getMonth();
+                if(monthlySales[monthIndex]) {
+                  monthlySales[monthIndex].sales += 1;
+                }
+            } catch(e) {
+                console.warn(`Invalid sale date for vehicle ${v.id}: ${v.saleDate}`);
+            }
+        }
+    });
+
     return {
       totalRevenue: sold.reduce((acc, v) => acc + (v.finalPrice || 0), 0),
-      availableVehicles: mockVehicles.filter((v) => v.status === 'Available').length,
+      availableVehicles: vehicles.filter((v) => v.status === 'Available').length,
       soldVehicles: sold.length,
-      incomingVehicles: mockVehicles.filter((v) => v.status === 'Incoming').length,
+      incomingVehicles: vehicles.filter((v) => v.status === 'Incoming').length,
+      salesByMonth: monthlySales,
     };
-  }, []);
+  }, [vehicles]);
 
 
   const stats = [
@@ -69,6 +99,20 @@ export default function DashboardPage() {
     },
   ];
 
+  if (loading) {
+    return (
+        <div className="grid gap-6">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                <Skeleton className="h-28" />
+                <Skeleton className="h-28" />
+                <Skeleton className="h-28" />
+                <Skeleton className="h-28" />
+            </div>
+            <Skeleton className="h-96" />
+        </div>
+    )
+  }
+
   return (
     <div className="grid gap-6">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -88,14 +132,14 @@ export default function DashboardPage() {
         <CardHeader>
           <CardTitle>Sales Overview</CardTitle>
           <CardDescription>
-            A summary of vehicle sales over the past 6 months (demo data).
+            A summary of vehicle sales over the past 6 months.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <ChartContainer config={chartConfig} className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
-                data={chartData}
+                data={salesByMonth}
                 margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />

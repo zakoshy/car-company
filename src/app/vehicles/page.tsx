@@ -11,11 +11,13 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Search } from 'lucide-react';
-import type { VehicleType } from '@/lib/types';
+import type { Vehicle, VehicleType } from '@/lib/types';
 import { Combobox } from '@/components/ui/combobox';
 import { getMakes } from '@/lib/makes';
-import { mockVehicles } from '@/lib/mock-data';
 import { useDebounce } from 'use-debounce';
+import { useCollection, useFirestore } from '@/firebase';
+import { collection, query, where } from 'firebase/firestore';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function VehiclesPage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -23,6 +25,40 @@ export default function VehiclesPage() {
   const [selectedMake, setSelectedMake] = useState('all');
   const [selectedFuel, setSelectedFuel] = useState('all');
   const [selectedType, setSelectedType] = useState('all');
+
+  const db = useFirestore();
+
+  const vehiclesQuery = useMemo(() => {
+    if (!db) return null;
+
+    let q = query(collection(db, 'vehicles'), where('status', '==', 'Available'));
+
+    if (selectedMake !== 'all') {
+      q = query(q, where('make', '==', selectedMake));
+    }
+    if (selectedFuel !== 'all') {
+      q = query(q, where('fuel', '==', selectedFuel));
+    }
+    if (selectedType !== 'all') {
+      q = query(q, where('vehicleType', '==', selectedType));
+    }
+    // Note: Full-text search on other fields requires a dedicated search service
+    // like Algolia or Typesense. For now, we filter the results client-side.
+    return q;
+  }, [db, selectedMake, selectedFuel, selectedType]);
+
+  const { data: vehiclesFromDB, loading } = useCollection<Vehicle>(vehiclesQuery);
+
+  const filteredVehicles = useMemo(() => {
+    if (!vehiclesFromDB) return [];
+    if (!debouncedSearchTerm) return vehiclesFromDB;
+    
+    return vehiclesFromDB.filter((vehicle) =>
+      `${vehicle.make} ${vehicle.model} ${vehicle.year} ${vehicle.referenceNumber} ${vehicle.chassisNumber}`
+        .toLowerCase()
+        .includes(debouncedSearchTerm.toLowerCase())
+    );
+  }, [vehiclesFromDB, debouncedSearchTerm]);
 
   const makes = ['all', ...getMakes()];
   const fuelTypes = ['all', 'Petrol', 'Diesel', 'Hybrid', 'Electric', 'LPG'];
@@ -39,29 +75,6 @@ export default function VehiclesPage() {
     'Truck',
     'Van',
   ];
-
-  const filteredVehicles = useMemo(() => {
-    let vehicles = mockVehicles.filter(v => v.status === 'Available');
-
-    if (selectedMake !== 'all') {
-      vehicles = vehicles.filter((v) => v.make === selectedMake);
-    }
-    if (selectedFuel !== 'all') {
-      vehicles = vehicles.filter((v) => v.fuel === selectedFuel);
-    }
-    if (selectedType !== 'all') {
-      vehicles = vehicles.filter((v) => v.vehicleType === selectedType);
-    }
-    if (debouncedSearchTerm) {
-      vehicles = vehicles.filter((vehicle) =>
-        `${vehicle.make} ${vehicle.model} ${vehicle.year} ${vehicle.referenceNumber} ${vehicle.chassisNumber}`
-          .toLowerCase()
-          .includes(debouncedSearchTerm.toLowerCase())
-      );
-    }
-    return vehicles;
-  }, [debouncedSearchTerm, selectedMake, selectedFuel, selectedType]);
-
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">
@@ -121,7 +134,14 @@ export default function VehiclesPage() {
         </Select>
       </div>
 
-      {filteredVehicles.length > 0 ? (
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
+            <Skeleton className="h-96 w-full" />
+            <Skeleton className="h-96 w-full" />
+            <Skeleton className="h-96 w-full" />
+            <Skeleton className="h-96 w-full" />
+        </div>
+      ) : filteredVehicles.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
           {filteredVehicles.map((vehicle) => (
             <VehicleCard key={vehicle.id} vehicle={vehicle} />

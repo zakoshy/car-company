@@ -22,12 +22,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import Image from 'next/image';
-import {
-  AlertCircle,
-  Loader2,
-  UploadCloud,
-  X,
-} from 'lucide-react';
+import { Loader2, UploadCloud, X } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -43,6 +38,7 @@ import {
 import { Combobox } from '@/components/ui/combobox';
 import { saveVehicle } from '@/lib/mutations';
 import { v4 as uuidv4 } from 'uuid';
+import { useFirestore } from '@/firebase';
 
 const vehicleTypes: VehicleType[] = [
   'Coupe',
@@ -85,6 +81,10 @@ const vehicleFormSchema = z.object({
   currency: z.enum(['USD', 'KSh']),
   status: z.enum(['Incoming', 'Available', 'Sold']),
   inspectionStatus: z.enum(['Pending', 'Passed', 'Failed']),
+  arrivalDate: z.string().optional(),
+  saleDate: z.string().optional(),
+  buyerDetails: z.string().optional(),
+  finalPrice: z.coerce.number().optional(),
 });
 
 type VehicleFormValues = z.infer<typeof vehicleFormSchema>;
@@ -98,6 +98,7 @@ type ImageFile = {
 export function VehicleForm({ vehicle }: { vehicle?: Vehicle }) {
   const { toast } = useToast();
   const router = useRouter();
+  const db = useFirestore();
 
   const [existingImages, setExistingImages] = useState<VehicleImage[]>(
     vehicle?.images || []
@@ -110,24 +111,35 @@ export function VehicleForm({ vehicle }: { vehicle?: Vehicle }) {
 
   const form = useForm<VehicleFormValues>({
     resolver: zodResolver(vehicleFormSchema),
-    defaultValues: vehicle || {
-      make: '',
-      model: '',
-      year: new Date().getFullYear(),
-      referenceNumber: '',
-      chassisNumber: '',
-      drivetrain: 'RWD',
-      transmission: 'Manual',
-      color: '',
-      fuel: 'Petrol',
-      vehicleType: 'Sedan',
-      mileage: 0,
-      condition: 'Used',
-      price: 0,
-      currency: 'USD',
-      status: 'Available',
-      inspectionStatus: 'Pending',
-    },
+    defaultValues: vehicle
+      ? {
+          ...vehicle,
+          arrivalDate: vehicle.arrivalDate || '',
+          saleDate: vehicle.saleDate || '',
+          buyerDetails: vehicle.buyerDetails || '',
+          finalPrice: vehicle.finalPrice || undefined,
+        }
+      : {
+          make: '',
+          model: '',
+          year: new Date().getFullYear(),
+          referenceNumber: '',
+          chassisNumber: '',
+          drivetrain: 'RWD',
+          transmission: 'Manual',
+          color: '',
+          fuel: 'Petrol',
+          vehicleType: 'Sedan',
+          mileage: 0,
+          condition: 'Used',
+          price: 1000,
+          currency: 'USD',
+          status: 'Available',
+          inspectionStatus: 'Pending',
+          arrivalDate: '',
+          saleDate: '',
+          buyerDetails: '',
+        },
   });
 
   const uploadImage = async (file: File): Promise<VehicleImage> => {
@@ -135,7 +147,7 @@ export function VehicleForm({ vehicle }: { vehicle?: Vehicle }) {
     const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
     if (!cloudName || !uploadPreset) {
-      throw new Error('Cloudinary configuration is missing in .env file.');
+      throw new Error('Cloudinary configuration is missing.');
     }
 
     const formData = new FormData();
@@ -151,7 +163,8 @@ export function VehicleForm({ vehicle }: { vehicle?: Vehicle }) {
     );
 
     if (!response.ok) {
-      throw new Error('Image upload failed.');
+      const errorData = await response.json();
+      throw new Error(`Image upload failed: ${errorData.error.message}`);
     }
 
     const data = await response.json();
@@ -196,46 +209,88 @@ export function VehicleForm({ vehicle }: { vehicle?: Vehicle }) {
   const removeExistingImage = (id: string) => {
     setExistingImages((prev) => prev.filter((img) => img.id !== id));
   };
-  
-  async function onSubmit(data: VehicleFormValues) {
-    setIsSubmitting(true);
-    
-    try {
-      if (newImageFiles.length > 0) {
-        toast({ title: "Uploading images...", description: "Please wait." });
-        const uploadPromises = newImageFiles.map(imageFile => uploadImage(imageFile.file));
-        await Promise.all(uploadPromises);
-      }
-      
-      toast({ title: "Saving vehicle data..." });
-      await saveVehicle({ ...data, id: vehicle?.id, images: [] }); // Images are not saved in demo
 
-      toast({ title: "Success! (Demo)", description: "Vehicle data has been saved." });
+  const setFeatureImage = (id: string) => {
+    setExistingImages((prev) =>
+      prev.map((img) => ({ ...img, isFeature: img.id === id }))
+    );
+    setNewImageFiles((prev) =>
+      prev.map((img) => ({ ...img, isFeature: false }))
+    );
+  };
+
+  async function onSubmit(data: VehicleFormValues) {
+    if (!db) {
+      toast({
+        variant: 'destructive',
+        title: 'Database not connected',
+        description: 'Cannot save vehicle.',
+      });
+      return;
+    }
+    setIsSubmitting(true);
+
+    try {
+      let uploadedImages: VehicleImage[] = [];
+      if (newImageFiles.length > 0) {
+        toast({
+          title: `Uploading ${newImageFiles.length} images...`,
+          description: 'Please wait.',
+        });
+        const uploadPromises = newImageFiles.map((imageFile) =>
+          uploadImage(imageFile.file)
+        );
+        uploadedImages = await Promise.all(uploadPromises);
+      }
+
+      toast({ title: 'Saving vehicle data...' });
+      const allImages = [...existingImages, ...uploadedImages];
+      if (allImages.length > 0 && !allImages.some((img) => img.isFeature)) {
+        allImages[0].isFeature = true; // Default first image to feature if none is set
+      }
+
+      const vehicleData = {
+        ...data,
+        id: vehicle?.id,
+        images: allImages,
+      };
+
+      await saveVehicle(db, vehicleData);
+
+      toast({
+        title: 'Vehicle Saved!',
+        description: `${data.make} ${data.model} has been saved successfully.`,
+      });
       router.push('/admin/vehicles');
       router.refresh();
-
     } catch (error: any) {
-      console.error("Failed to save vehicle:", error);
+      console.error('Failed to save vehicle:', error);
       toast({
-        variant: "destructive",
-        title: "Something went wrong",
-        description: error.message || "Could not save the vehicle. Please try again."
+        variant: 'destructive',
+        title: 'Something went wrong',
+        description:
+          error.message || 'Could not save the vehicle. Please try again.',
       });
     } finally {
       setIsSubmitting(false);
     }
   }
-  
+
   const allImagePreviews = [
-    ...existingImages.map(img => ({ ...img, isNew: false })), 
-    ...newImageFiles.map(img => ({ id: img.id, url: img.previewUrl, isFeature: false, isNew: true }))
+    ...existingImages.map((img) => ({ ...img, isNew: false })),
+    ...newImageFiles.map((img) => ({
+      id: img.id,
+      url: img.previewUrl,
+      isFeature: false,
+      isNew: true,
+    })),
   ];
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-6">
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-           <FormField
+          <FormField
             control={form.control}
             name="make"
             render={({ field }) => (
@@ -554,7 +609,7 @@ export function VehicleForm({ vehicle }: { vehicle?: Vehicle }) {
           <CardHeader>
             <CardTitle>Vehicle Images</CardTitle>
             <CardDescription>
-              Upload images for the vehicle. The first image will be the
+              Upload images for the vehicle. Click an image to set it as the
               featured one.
             </CardDescription>
           </CardHeader>
@@ -602,13 +657,28 @@ export function VehicleForm({ vehicle }: { vehicle?: Vehicle }) {
                         fill
                         className="object-cover"
                       />
+                      <div
+                        className={cn(
+                          'absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer',
+                          img.isFeature && 'opacity-100'
+                        )}
+                        onClick={() => setFeatureImage(img.id)}
+                      >
+                        <span className="text-white font-bold text-sm">
+                          {img.isFeature ? 'Featured' : 'Set as Feature'}
+                        </span>
+                      </div>
                       <div className="absolute top-1 right-1">
                         <Button
                           type="button"
                           variant="destructive"
                           size="icon"
                           className="h-6 w-6 opacity-0 group-hover:opacity-100"
-                          onClick={() => img.isNew ? removeNewImage(img.id) : removeExistingImage(img.id)}
+                          onClick={() =>
+                            img.isNew
+                              ? removeNewImage(img.id)
+                              : removeExistingImage(img.id)
+                          }
                         >
                           <X className="h-4 w-4" />
                         </Button>

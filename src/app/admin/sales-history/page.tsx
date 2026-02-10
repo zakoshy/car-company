@@ -1,11 +1,21 @@
 'use client';
 
+import { useMemo } from 'react';
 import { SalesHistoryTable } from '@/app/admin/components/sales-history-table';
-import { mockVehicles } from '@/lib/mock-data';
+import { useCollection, useFirestore } from '@/firebase';
+import { collection, query, where } from 'firebase/firestore';
+import type { Vehicle } from '@/lib/types';
 
 
 export default function SalesHistoryPage() {
-  const soldVehicles = mockVehicles.filter(v => v.status === 'Sold');
+  const db = useFirestore();
+  
+  const soldQuery = useMemo(() => {
+    if (!db) return null;
+    return query(collection(db, 'vehicles'), where('status', '==', 'Sold'));
+  }, [db]);
+  
+  const { data: soldVehicles, loading } = useCollection<Vehicle>(soldQuery);
 
   return (
     <div className="grid flex-1 items-start gap-4">
@@ -14,7 +24,7 @@ export default function SalesHistoryPage() {
           Sales History
         </h2>
       </div>
-      <SalesHistoryTable vehicles={soldVehicles} />
+      <SalesHistoryTable vehicles={soldVehicles || []} isLoading={loading} />
     </div>
   );
 }

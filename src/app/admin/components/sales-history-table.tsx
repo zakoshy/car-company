@@ -9,8 +9,27 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatCurrency } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
 
-export function SalesHistoryTable({ vehicles }: { vehicles: Pick<Vehicle, 'id' | 'make' | 'model' | 'year' | 'saleDate' | 'buyerDetails' | 'finalPrice' | 'currency'>[] }) {
+export function SalesHistoryTable({ vehicles, isLoading }: { vehicles: Pick<Vehicle, 'id' | 'make' | 'model' | 'year' | 'saleDate' | 'buyerDetails' | 'finalPrice' | 'currency'>[], isLoading: boolean }) {
+
+   if (isLoading) {
+    return (
+       <Card>
+        <CardHeader>
+          <CardTitle>Completed Sales</CardTitle>
+          <CardDescription>A log of all vehicles that have been sold.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-12 w-full" />
+          </div>
+        </CardContent>
+      </Card>
+    )
+   }
 
    if (vehicles.length === 0) {
     return (

@@ -6,19 +6,25 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PlusCircle } from 'lucide-react';
 import Link from 'next/link';
 import { VehicleTable } from '@/app/admin/components/vehicle-table';
-import { mockVehicles } from '@/lib/mock-data';
+import { useCollection, useFirestore } from '@/firebase';
+import { collection, query } from 'firebase/firestore';
+import type { Vehicle } from '@/lib/types';
+
 
 export default function AdminVehiclesPage() {
-  const { allVehicles, availableVehicles, incomingVehicles, soldVehicles } =
+  const db = useFirestore();
+  const vehiclesQuery = useMemo(() => db ? query(collection(db, 'vehicles')) : null, [db]);
+  const { data: allVehiclesData, loading } = useCollection<Vehicle>(vehiclesQuery);
+  const allVehicles = allVehiclesData || [];
+
+  const { availableVehicles, incomingVehicles, soldVehicles } =
     useMemo(() => {
-      const all = mockVehicles;
       return {
-        allVehicles: all,
-        availableVehicles: all.filter((v) => v.status === 'Available'),
-        incomingVehicles: all.filter((v) => v.status === 'Incoming'),
-        soldVehicles: all.filter((v) => v.status === 'Sold'),
+        availableVehicles: allVehicles.filter((v) => v.status === 'Available'),
+        incomingVehicles: allVehicles.filter((v) => v.status === 'Incoming'),
+        soldVehicles: allVehicles.filter((v) => v.status === 'Sold'),
       };
-    }, []);
+    }, [allVehicles]);
 
   return (
     <div className="grid flex-1 items-start gap-4">
@@ -41,16 +47,16 @@ export default function AdminVehiclesPage() {
           <TabsTrigger value="sold">Sold</TabsTrigger>
         </TabsList>
         <TabsContent value="all">
-          <VehicleTable vehicles={allVehicles} />
+          <VehicleTable vehicles={allVehicles} isLoading={loading} />
         </TabsContent>
         <TabsContent value="available">
-          <VehicleTable vehicles={availableVehicles} />
+          <VehicleTable vehicles={availableVehicles} isLoading={loading} />
         </TabsContent>
         <TabsContent value="incoming">
-          <VehicleTable vehicles={incomingVehicles} />
+          <VehicleTable vehicles={incomingVehicles} isLoading={loading} />
         </TabsContent>
         <TabsContent value="sold">
-          <VehicleTable vehicles={soldVehicles} />
+          <VehicleTable vehicles={soldVehicles} isLoading={loading} />
         </TabsContent>
       </Tabs>
     </div>

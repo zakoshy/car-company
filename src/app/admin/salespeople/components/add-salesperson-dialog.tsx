@@ -19,6 +19,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { PlusCircle, Loader2 } from 'lucide-react';
 import { saveSalesperson } from '@/lib/mutations';
+import { useFirestore } from '@/firebase';
 
 const salespersonSchema = z.object({
   name: z.string().min(2, 'Name is required'),
@@ -27,14 +28,11 @@ const salespersonSchema = z.object({
 
 type SalespersonFormValues = z.infer<typeof salespersonSchema>;
 
-export function AddSalespersonDialog({
-  onSalespersonAdded,
-}: {
-  onSalespersonAdded: () => void;
-}) {
+export function AddSalespersonDialog() {
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const db = useFirestore();
 
   const form = useForm<SalespersonFormValues>({
     resolver: zodResolver(salespersonSchema),
@@ -45,13 +43,21 @@ export function AddSalespersonDialog({
   });
 
   async function onSubmit(data: SalespersonFormValues) {
+    if (!db) {
+      toast({ variant: 'destructive', title: 'Database not connected.' });
+      return;
+    }
     setIsSubmitting(true);
-    await saveSalesperson(data);
-    toast({ title: 'Salesperson Added (Demo)', description: `${data.name} has been added.` });
-    onSalespersonAdded();
-    setOpen(false);
-    form.reset();
-    setIsSubmitting(false);
+    try {
+      await saveSalesperson(db, data);
+      toast({ title: 'Salesperson Added', description: `${data.name} has been added.` });
+      setOpen(false);
+      form.reset();
+    } catch (error: any) {
+       toast({ variant: 'destructive', title: 'Error', description: error.message });
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (

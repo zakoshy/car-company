@@ -18,29 +18,38 @@ export default function ContactPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-start gap-4">
-              <MapPin className="h-6 w-6 text-primary mt-1" />
+              <MapPin className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
               <div>
-                <h3 className="font-semibold">Our Address</h3>
+                <h3 className="font-semibold">Our Location</h3>
                 <p className="text-muted-foreground">
-                  123 Auto Row, Tokyo, 100-0001, Japan
+                 Moi Avenue Road, Opposite Airtel Customer Care, Mombasa, Kenya
                 </p>
               </div>
             </div>
-            <div className="flex items-start gap-4">
-              <Mail className="h-6 w-6 text-primary mt-1" />
-              <div>
-                <h3 className="font-semibold">Email</h3>
-                <p className="text-muted-foreground">
-                  sales@alziatrading.com
-                </p>
-              </div>
-            </div>
-            <div className="flex items-start gap-4">
-              <Phone className="h-6 w-6 text-primary mt-1" />
+             <div className="flex items-start gap-4">
+              <Phone className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
               <div>
                 <h3 className="font-semibold">Phone</h3>
                 <p className="text-muted-foreground">
-                  +81 3-1234-5678
+                  +254 70800 5527
+                </p>
+              </div>
+            </div>
+             <div className="flex items-start gap-4">
+              <Phone className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
+              <div>
+                <h3 className="font-semibold">WhatsApp</h3>
+                <p className="text-muted-foreground">
+                  +256 776 754426
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start gap-4">
+              <Mail className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
+              <div>
+                <h3 className="font-semibold">Email</h3>
+                <p className="text-muted-foreground">
+                  alziaauto2030@gmail.com
                 </p>
               </div>
             </div>
