@@ -20,7 +20,7 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 import Link from 'next/link';
 import { useUser, useAuth } from "@/firebase";
 import { signOut } from "firebase/auth";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 
@@ -31,19 +31,35 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const auth = useAuth();
   const avatar = PlaceHolderImages.find((img) => img.id === 'user-avatar');
 
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (user === undefined) {
+      // Firebase auth state is still loading
+      return;
+    }
+
+    const demoSessionActive = sessionStorage.getItem('demo-admin-logged-in') === 'true';
+
+    if (user || demoSessionActive) {
+      setIsAuthorized(true);
+    } else {
+      router.replace('/login');
+    }
+    
+    setIsLoading(false);
+  }, [user, router]);
+
   const handleLogout = async () => {
-    if (!auth) return;
-    await signOut(auth);
+    if (auth) {
+      await signOut(auth);
+    }
+    sessionStorage.removeItem('demo-admin-logged-in');
     router.push('/login');
   };
 
-  useEffect(() => {
-    if (user === null) {
-      router.replace('/login');
-    }
-  }, [user, router]);
-
-  if (user === undefined) {
+  if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin" />
@@ -51,9 +67,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     );
   }
   
-  if (!user) {
-    return null; // or a login redirect, though useEffect handles it
+  if (!isAuthorized) {
+    return null; // Redirect is handled in useEffect
   }
+  
+  // Create a display user object for both real and demo sessions
+  const displayUser = user || {
+      displayName: 'Demo Admin',
+      email: 'admin@example.com',
+      photoURL: avatar?.imageUrl,
+  };
 
   const navItems = [
     { href: "/admin/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -92,13 +115,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <div className="flex items-center justify-between w-full">
               <Link href="/admin/profile" className="flex items-center gap-2">
                 <Avatar className="h-8 w-8">
-                  {avatar && <AvatarImage src={user.photoURL || avatar.imageUrl} alt={user.displayName || "Admin"} />}
+                  <AvatarImage src={displayUser.photoURL || avatar?.imageUrl} alt={displayUser.displayName || "Admin"} />
                   <AvatarFallback>
                     <User />
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col group-data-[collapsible=icon]:hidden">
-                  <span className="text-sm font-semibold">{user.displayName || user.email}</span>
+                  <span className="text-sm font-semibold">{displayUser.displayName || displayUser.email}</span>
                    <span className="text-xs text-muted-foreground hover:underline">
                     View Profile
                   </span>

@@ -81,7 +81,7 @@ export default function LoginPage() {
       // Simulate a login for demo purposes
       if (email === 'admin@example.com' && password === 'password') {
         toast({ title: 'Login successful! (Demo Mode)' });
-        // In demo mode, we can't create a real user session, so we just navigate.
+        sessionStorage.setItem('demo-admin-logged-in', 'true');
         router.push('/admin/dashboard');
       } else {
         const message =
@@ -105,13 +105,10 @@ export default function LoginPage() {
     } catch (err: any) {
       let message = 'An unknown error occurred during login.';
 
-      // The 'auth/invalid-credential' error is intentionally vague in modern Firebase SDKs
-      // to prevent user enumeration attacks.
       if (err.code === 'auth/invalid-credential') {
         message =
           'Invalid credentials. Please check your email and password. Also, ensure the Email/Password sign-in method is enabled in your Firebase console.';
       } else if (err.code) {
-        // Log the specific code for debugging if it's not the generic one
         console.error('Firebase Auth Error Code:', err.code);
         message = `Login failed. Please try again. (Error: ${err.code})`;
       }
