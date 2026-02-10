@@ -1,99 +1,51 @@
 'use client';
 
-import {
-  collection,
-  doc,
-  setDoc,
-  addDoc,
-  deleteDoc,
-  serverTimestamp,
-  type Firestore,
-} from 'firebase/firestore';
 import type { Vehicle, Salesperson } from './types';
-import { errorEmitter } from '@/firebase/error-emitter';
-import { FirestorePermissionError } from '@/firebase/errors';
 
 /**
- * Saves (creates or updates) a vehicle document in Firestore.
- * @param firestore The Firestore instance.
+ * Saves (creates or updates) a vehicle document.
+ * NOTE: This is a mock implementation for demo purposes.
  * @param vehicle The vehicle data to save.
  */
-export function saveVehicle(firestore: Firestore, vehicle: Omit<Vehicle, 'id'> & { id?: string }) {
-  const { id, ...data } = vehicle;
-  const col = collection(firestore, 'vehicles');
-  const ref = id ? doc(col, id) : doc(col);
-
-  const operation = id ? 'update' : 'create';
-
-  setDoc(ref, { ...data, updatedAt: serverTimestamp() }, { merge: true })
-    .catch(async (serverError) => {
-      const permissionError = new FirestorePermissionError({
-        path: ref.path,
-        operation: operation,
-        requestResourceData: data,
-      });
-      errorEmitter.emit('permission-error', permissionError);
-      // Re-throw so the component knows the operation failed
-      throw permissionError;
-    });
+export async function saveVehicle(vehicle: Omit<Vehicle, 'id'> & { id?: string }) {
+  console.log('Simulating save for vehicle:', vehicle);
+  // In a real implementation, this would interact with a database.
+  await new Promise(resolve => setTimeout(resolve, 500));
+  return Promise.resolve();
 }
 
 /**
- * Deletes a vehicle document from Firestore.
- * @param firestore The Firestore instance.
+ * Deletes a vehicle document.
+ * NOTE: This is a mock implementation for demo purposes.
  * @param vehicleId The ID of the vehicle to delete.
  */
-export function deleteVehicle(firestore: Firestore, vehicleId: string) {
-  const ref = doc(firestore, 'vehicles', vehicleId);
-  deleteDoc(ref)
-    .catch(async (serverError) => {
-      const permissionError = new FirestorePermissionError({
-        path: ref.path,
-        operation: 'delete',
-      });
-      errorEmitter.emit('permission-error', permissionError);
-      throw permissionError;
-    });
+export async function deleteVehicle(vehicleId: string) {
+  console.log('Simulating delete for vehicle ID:', vehicleId);
+  // In a real implementation, this would interact with a database.
+  await new Promise(resolve => setTimeout(resolve, 500));
+  return Promise.resolve();
 }
 
 /**
- * Saves (creates or updates) a salesperson document in Firestore.
- * @param firestore The Firestore instance.
+ * Saves (creates or updates) a salesperson document.
+ * NOTE: This is a mock implementation for demo purposes.
  * @param salesperson The salesperson data to save.
  */
-export function saveSalesperson(firestore: Firestore, salesperson: Omit<Salesperson, 'id'> & { id?: string }) {
-    const { id, ...data } = salesperson;
-    const col = collection(firestore, 'salespeople');
-    const ref = id ? doc(col, id) : doc(col);
-
-    const operation = id ? 'update' : 'create';
-
-    setDoc(ref, data, { merge: true })
-      .catch(async (serverError) => {
-        const permissionError = new FirestorePermissionError({
-          path: ref.path,
-          operation: operation,
-          requestResourceData: data,
-        });
-        errorEmitter.emit('permission-error', permissionError);
-        throw permissionError;
-      });
+export async function saveSalesperson(salesperson: Omit<Salesperson, 'id'> & { id?: string }) {
+    console.log('Simulating save for salesperson:', salesperson);
+    // In a real implementation, this would interact with a database.
+    await new Promise(resolve => setTimeout(resolve, 500));
+    return Promise.resolve();
 }
 
 /**
- * Deletes a salesperson document from Firestore.
- * @param firestore The Firestore instance.
+ * Deletes a salesperson document.
+ * NOTE: This is a mock implementation for demo purposes.
  * @param salespersonId The ID of the salesperson to delete.
  */
-export function deleteSalesperson(firestore: Firestore, salespersonId: string) {
-    const ref = doc(firestore, 'salespeople', salespersonId);
-    deleteDoc(ref)
-      .catch(async (serverError) => {
-        const permissionError = new FirestorePermissionError({
-          path: ref.path,
-          operation: 'delete',
-        });
-        errorEmitter.emit('permission-error', permissionError);
-        throw permissionError;
-      });
+export async function deleteSalesperson(salespersonId: string) {
+    console.log('Simulating delete for salesperson ID:', salespersonId);
+    // In a real implementation, this would interact with a database.
+    await new Promise(resolve => setTimeout(resolve, 500));
+    return Promise.resolve();
 }

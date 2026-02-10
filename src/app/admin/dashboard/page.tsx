@@ -14,18 +14,16 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/chart';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer } from 'recharts';
-import { Car, DollarSign, PackageCheck, PackageOpen, Loader2 } from 'lucide-react';
-import type { Vehicle } from '@/lib/types';
-import { useFirestore, useCollection } from '@/firebase';
-import { collection, query } from 'firebase/firestore';
+import { Car, DollarSign, PackageCheck, PackageOpen } from 'lucide-react';
+import { mockVehicles } from '@/lib/mock-data';
 
 const chartData = [
-  { month: 'January', sales: 0 },
-  { month: 'February', sales: 0 },
-  { month: 'March', sales: 0 },
-  { month: 'April', sales: 0 },
-  { month: 'May', sales: 0 },
-  { month: 'June', sales: 0 },
+  { month: 'January', sales: 186 },
+  { month: 'February', sales: 305 },
+  { month: 'March', sales: 237 },
+  { month: 'April', sales: 73 },
+  { month: 'May', sales: 209 },
+  { month: 'June', sales: 214 },
 ];
 
 const chartConfig = {
@@ -36,37 +34,20 @@ const chartConfig = {
 };
 
 export default function DashboardPage() {
-  const firestore = useFirestore();
-
-  const vehiclesQuery = useMemo(() => {
-    if (!firestore) return null;
-    return query(collection(firestore, 'vehicles'));
-  }, [firestore]);
-  
-  const { data: vehicles, loading } = useCollection<Vehicle>(vehiclesQuery);
-
   const {
     totalRevenue,
     availableVehicles,
     soldVehicles,
     incomingVehicles,
   } = useMemo(() => {
-    if (!vehicles) {
-      return {
-        totalRevenue: 0,
-        availableVehicles: 0,
-        soldVehicles: 0,
-        incomingVehicles: 0,
-      };
-    }
-    const sold = vehicles.filter((v) => v.status === 'Sold' && v.finalPrice);
+    const sold = mockVehicles.filter((v) => v.status === 'Sold' && v.finalPrice);
     return {
       totalRevenue: sold.reduce((acc, v) => acc + (v.finalPrice || 0), 0),
-      availableVehicles: vehicles.filter((v) => v.status === 'Available').length,
+      availableVehicles: mockVehicles.filter((v) => v.status === 'Available').length,
       soldVehicles: sold.length,
-      incomingVehicles: vehicles.filter((v) => v.status === 'Incoming').length,
+      incomingVehicles: mockVehicles.filter((v) => v.status === 'Incoming').length,
     };
-  }, [vehicles]);
+  }, []);
 
 
   const stats = [
@@ -87,14 +68,6 @@ export default function DashboardPage() {
       icon: PackageOpen,
     },
   ];
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-96">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
-  }
 
   return (
     <div className="grid gap-6">

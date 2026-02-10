@@ -10,17 +10,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Loader2, Search } from 'lucide-react';
-import type { Vehicle, VehicleType } from '@/lib/types';
+import { Search } from 'lucide-react';
+import type { VehicleType } from '@/lib/types';
 import { Combobox } from '@/components/ui/combobox';
 import { getMakes } from '@/lib/makes';
-import { useFirestore, useCollection } from '@/firebase';
-import { collection, query, where, DocumentData } from 'firebase/firestore';
+import { mockVehicles } from '@/lib/mock-data';
 import { useDebounce } from 'use-debounce';
 
 export default function VehiclesPage() {
-  const firestore = useFirestore();
-
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearchTerm] = useDebounce(searchTerm, 300);
   const [selectedMake, setSelectedMake] = useState('all');
@@ -43,40 +40,27 @@ export default function VehiclesPage() {
     'Van',
   ];
 
-  const vehiclesQuery = useMemo(() => {
-    if (!firestore) return null;
-    
-    const q = query(
-      collection(firestore, 'vehicles'),
-      where('status', '==', 'Available')
-    );
-    
-    const constraints: DocumentData[] = [];
+  const filteredVehicles = useMemo(() => {
+    let vehicles = mockVehicles.filter(v => v.status === 'Available');
+
     if (selectedMake !== 'all') {
-      constraints.push(where('make', '==', selectedMake));
+      vehicles = vehicles.filter((v) => v.make === selectedMake);
     }
     if (selectedFuel !== 'all') {
-      constraints.push(where('fuel', '==', selectedFuel));
+      vehicles = vehicles.filter((v) => v.fuel === selectedFuel);
     }
     if (selectedType !== 'all') {
-      constraints.push(where('vehicleType', '==', selectedType));
+      vehicles = vehicles.filter((v) => v.vehicleType === selectedType);
     }
-
-    return query(q, ...constraints);
-
-  }, [firestore, selectedMake, selectedFuel, selectedType]);
-
-  const { data: allVehicles, loading } = useCollection<Vehicle>(vehiclesQuery);
-
-  const filteredVehicles = useMemo(() => {
-    if (!allVehicles) return [];
-    if (!debouncedSearchTerm) return allVehicles;
-    return allVehicles.filter((vehicle) =>
-      `${vehicle.make} ${vehicle.model} ${vehicle.year}`
-        .toLowerCase()
-        .includes(debouncedSearchTerm.toLowerCase())
-    );
-  }, [allVehicles, debouncedSearchTerm]);
+    if (debouncedSearchTerm) {
+      vehicles = vehicles.filter((vehicle) =>
+        `${vehicle.make} ${vehicle.model} ${vehicle.year}`
+          .toLowerCase()
+          .includes(debouncedSearchTerm.toLowerCase())
+      );
+    }
+    return vehicles;
+  }, [debouncedSearchTerm, selectedMake, selectedFuel, selectedType]);
 
 
   return (
@@ -137,11 +121,7 @@ export default function VehiclesPage() {
         </Select>
       </div>
 
-      {loading ? (
-        <div className="flex justify-center py-20">
-          <Loader2 className="h-10 w-10 animate-spin" />
-        </div>
-      ) : filteredVehicles.length > 0 ? (
+      {filteredVehicles.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
           {filteredVehicles.map((vehicle) => (
             <VehicleCard key={vehicle.id} vehicle={vehicle} />

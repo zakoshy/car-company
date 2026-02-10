@@ -41,7 +41,6 @@ import {
   FormControl,
 } from '@/components/ui/form';
 import { Combobox } from '@/components/ui/combobox';
-import { useFirestore } from '@/firebase';
 import { saveVehicle } from '@/lib/mutations';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -99,7 +98,6 @@ type ImageFile = {
 export function VehicleForm({ vehicle }: { vehicle?: Vehicle }) {
   const { toast } = useToast();
   const router = useRouter();
-  const firestore = useFirestore();
 
   const [existingImages, setExistingImages] = useState<VehicleImage[]>(
     vehicle?.images || []
@@ -137,7 +135,7 @@ export function VehicleForm({ vehicle }: { vehicle?: Vehicle }) {
     const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
     if (!cloudName || !uploadPreset) {
-      throw new Error('Cloudinary configuration is missing.');
+      throw new Error('Cloudinary configuration is missing in .env file.');
     }
 
     const formData = new FormData();
@@ -200,33 +198,19 @@ export function VehicleForm({ vehicle }: { vehicle?: Vehicle }) {
   };
   
   async function onSubmit(data: VehicleFormValues) {
-    if (!firestore) {
-      toast({ variant: "destructive", title: "Database connection not found." });
-      return;
-    }
-    
     setIsSubmitting(true);
     
     try {
-      toast({ title: "Uploading images...", description: "Please wait." });
-      const uploadPromises = newImageFiles.map(imageFile => uploadImage(imageFile.file));
-      const uploadedImages = await Promise.all(uploadPromises);
-
-      const allImages = [...existingImages, ...uploadedImages];
-      if (allImages.length > 0 && !allImages.some(img => img.isFeature)) {
-          allImages[0].isFeature = true;
+      if (newImageFiles.length > 0) {
+        toast({ title: "Uploading images...", description: "Please wait." });
+        const uploadPromises = newImageFiles.map(imageFile => uploadImage(imageFile.file));
+        await Promise.all(uploadPromises);
       }
-
-      const vehicleData: Omit<Vehicle, 'id'> & { id?: string } = {
-        ...data,
-        images: allImages,
-        id: vehicle?.id,
-      };
       
       toast({ title: "Saving vehicle data..." });
-      await saveVehicle(firestore, vehicleData);
+      await saveVehicle({ ...data, id: vehicle?.id, images: [] }); // Images are not saved in demo
 
-      toast({ title: "Success!", description: "Vehicle has been saved." });
+      toast({ title: "Success! (Demo)", description: "Vehicle data has been saved." });
       router.push('/admin/vehicles');
       router.refresh();
 

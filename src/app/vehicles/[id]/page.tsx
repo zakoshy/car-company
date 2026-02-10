@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useMemo } from 'react';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,7 +19,6 @@ import {
   Cog,
   Settings,
   Palette,
-  Loader2,
 } from 'lucide-react';
 import {
   Carousel,
@@ -29,29 +28,11 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel';
 import { formatCurrency } from '@/lib/utils';
-import type { Vehicle } from '@/lib/types';
-import { useFirestore, useDoc } from '@/firebase';
-import { doc } from 'firebase/firestore';
+import { mockVehicles } from '@/lib/mock-data';
 
 
 export default function VehicleDetailPage({ params }: { params: { id: string } }) {
-  const firestore = useFirestore();
-
-  const vehicleRef = useMemo(() => {
-    if (!firestore || !params.id) return null;
-    return doc(firestore, 'vehicles', params.id);
-  }, [firestore, params.id]);
-
-  const { data: vehicle, loading } = useDoc<Vehicle>(vehicleRef);
-
-
-  if (loading) {
-    return (
-      <div className="flex h-[80vh] items-center justify-center">
-        <Loader2 className="h-10 w-10 animate-spin" />
-      </div>
-    );
-  }
+  const vehicle = mockVehicles.find((v) => v.id === params.id);
 
   if (!vehicle) {
     notFound();
@@ -149,8 +130,8 @@ export default function VehicleDetailPage({ params }: { params: { id: string } }
             </CardContent>
           </Card>
 
-          <Button size="lg" className="w-full mt-6 text-lg">
-            Inquire About This Vehicle
+          <Button size="lg" className="w-full mt-6 text-lg" asChild>
+            <Link href="/contact">Inquire About This Vehicle</Link>
           </Button>
         </div>
       </div>
