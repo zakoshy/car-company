@@ -38,9 +38,8 @@ const chartConfig = {
 
 export default function DashboardPage() {
   const db = useFirestore();
-  const { data: vehicles, loading } = useCollection<Vehicle>(
-    db ? collection(db, 'vehicles') : null
-  );
+  const vehiclesQuery = useMemo(() => (db ? collection(db, 'vehicles') : null), [db]);
+  const { data: vehicles, loading } = useCollection<Vehicle>(vehiclesQuery);
 
   const {
     totalRevenue,
