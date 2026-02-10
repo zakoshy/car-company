@@ -34,7 +34,7 @@ export default function ProfilePage() {
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const avatar = PlaceHolderImages.find((img) => img.id === 'user-avatar');
 
-  const form = useForm<ProfileFormValues>({
+  const { control, handleSubmit, formState: { errors }, reset } = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
       displayName: "",
@@ -43,9 +43,9 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (user) {
-      form.reset({ displayName: user.displayName || '' });
+      reset({ displayName: user.displayName || '' });
     }
-  }, [user, form]);
+  }, [user, reset]);
 
   if (user === undefined) {
     return (
@@ -146,7 +146,7 @@ export default function ProfilePage() {
           <CardDescription>View and edit your personal information.</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="flex flex-col items-center gap-4">
               <div className="relative">
                 <Avatar className="h-24 w-24">
@@ -171,11 +171,11 @@ export default function ProfilePage() {
               <Label htmlFor="displayName">Display Name</Label>
               <Controller
                 name="displayName"
-                control={form.control}
+                control={control}
                 render={({ field }) => <Input id="displayName" {...field} />}
               />
-              {form.formState.errors.displayName && (
-                <p className="text-sm text-destructive">{form.formState.errors.displayName.message}</p>
+              {errors.displayName && (
+                <p className="text-sm text-destructive">{errors.displayName.message}</p>
               )}
             </div>
              <Button type="submit" disabled={isSubmitting}>
