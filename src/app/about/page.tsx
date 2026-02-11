@@ -11,7 +11,7 @@ export default function AboutPage() {
       <div className="text-center mb-12">
         <h1 className="font-headline text-4xl md:text-5xl font-bold">About AL-ZIA TRADING CO.LTD</h1>
         <p className="mt-2 text-muted-foreground max-w-3xl mx-auto">
-          Your trusted partner in importing and exporting high-quality Japanese vehicles worldwide.
+          Your trusted partner in importing and exporting high-quality Japanese and Thailand vehicles worldwide.
         </p>
       </div>
 
@@ -30,7 +30,7 @@ export default function AboutPage() {
         <div className="space-y-6">
             <h2 className="font-headline text-3xl font-semibold">Our Story</h2>
             <p className="text-muted-foreground">
-             AL-ZIA TRADING CO. LTD is a premier vehicle import and export management platform specializing in high-quality Japanese vehicles. We are dedicated to providing a transparent and efficient service, offering clear visibility of our inventory from the moment it arrives until it is sold. Our focus is on quality, reliability, and customer satisfaction.
+             AL-ZIA TRADING CO. LTD is a premier vehicle import and export management platform specializing in high-quality Japanese and Thailand vehicles. We are dedicated to providing a transparent and efficient service, offering clear visibility of our inventory from the moment it arrives until it is sold. Our focus is on quality, reliability, and customer satisfaction.
             </p>
              <p className="text-muted-foreground">
              We manage everything from inventory tracking and mileage management to handling all necessary documentation, ensuring a smooth process for our clients.
@@ -48,7 +48,7 @@ export default function AboutPage() {
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground">
-              To provide enthusiasts around the globe with access to top-tier Japanese vehicles, backed by a commitment to transparency, quality, and exceptional service.
+              To provide enthusiasts around the globe with access to top-tier Japanese and Thailand vehicles, backed by a commitment to transparency, quality, and exceptional service.
             </p>
           </CardContent>
         </Card>
@@ -61,7 +61,7 @@ export default function AboutPage() {
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground">
-              We are a team of passionate automotive experts with deep roots in the Japanese car market, dedicated to connecting buyers with their dream cars.
+              We are a team of passionate automotive experts with deep roots in the Japanese and Thailand car markets, dedicated to connecting buyers with their dream cars.
             </p>
           </CardContent>
         </Card>
