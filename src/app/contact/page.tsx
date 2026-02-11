@@ -23,7 +23,7 @@ const WhatsappIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 export default function ContactPage() {
   const googleMapsUrl =
-    'https://www.google.com/maps/dir/?api=1&destination=AL+ZIA+Car+Sales,Moi+Avenue,Mombasa,Kenya';
+    'https://www.google.com/maps/dir/?api=1&destination=Moi+Avenue+Road,Mombasa,Kenya+Opposite+Airtel+Customer+Care';
   const whatsappUrl = 'https://wa.me/256776754426';
 
   return (
@@ -49,7 +49,7 @@ export default function ContactPage() {
               <div>
                 <h3 className="font-semibold">Our Location</h3>
                 <p className="text-muted-foreground">
-                  Opposite NCBA Bank, Moi Avenue, Mombasa, Kenya
+                  Moi Avenue Road, Mombasa Kenya Opposite Airtel Customer Care
                 </p>
               </div>
             </div>
@@ -107,7 +107,7 @@ export default function ContactPage() {
           <CardContent>
             <div className="aspect-video w-full rounded-lg overflow-hidden border">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3979.8499955437513!2d39.66166567584547!3d-4.058866945415841!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x184012e457512c4f%3A0xe7260761e16f1a8!2sAl-Zia%20Motors%20Ltd!5e0!3m2!1sen!2ske!4v1721389812123!5m2!1sen!2ske"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3979.851082531065!2d39.66318937584546!3d-4.058645945416715!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x184012e453710c79%3A0x8671a53381a8a979!2sAirtel%20Express!5e0!3m2!1sen!2ske!4v1722000000000!5m2!1sen!2ske"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
