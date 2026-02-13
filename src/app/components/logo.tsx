@@ -12,7 +12,7 @@ type LogoProps = {
 export function Logo({ className, isLink = false }: LogoProps) {
   const content = (
     <>
-      <Image src="/logo1.jpg" alt="AL-ZIA TRADING CO.LTD Logo" width={64} height={40} className="rounded-md" />
+      <Image src="/logo1.jpg" alt="AL-ZIA TRADING CO.LTD Logo" width={80} height={50} className="rounded-md" />
       <span className="font-headline text-xl font-semibold whitespace-nowrap">AL-ZIA TRADING CO.LTD</span>
     </>
   );
