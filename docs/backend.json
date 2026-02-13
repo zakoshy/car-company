@@ -47,7 +47,7 @@
             "description": "A list of notable features for the vehicle."
         }
       },
-      "required": ["make", "model", "year", "price", "mileage", "status", "inspectionStatus", "chassisNumber", "fuel", "currency", "referenceNumber", "drivetrain", "transmission", "color", "vehicleType", "engineSize"]
+      "required": ["make", "model", "year", "mileage", "status", "inspectionStatus", "chassisNumber", "fuel", "currency", "referenceNumber", "drivetrain", "transmission", "color", "vehicleType", "engineSize"]
     },
     "salesperson": {
       "title": "Salesperson",

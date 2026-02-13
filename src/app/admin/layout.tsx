@@ -12,11 +12,9 @@ import {
   SidebarInset,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Logo } from "@/app/components/logo";
 import { LayoutDashboard, Car, History, User, LogOut, Loader2, Users } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import Link from 'next/link';
 import { useUser, useAuth } from "@/firebase";
 import { signOut } from "firebase/auth";
@@ -29,7 +27,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const router = useRouter();
   const user = useUser();
   const auth = useAuth();
-  const avatar = PlaceHolderImages.find((img) => img.id === 'user-avatar');
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -96,21 +93,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </SidebarContent>
           <SidebarFooter>
             <div className="flex items-center justify-between w-full">
-              <Link href="/admin/profile" className="flex items-center gap-2">
-                <Avatar className="h-8 w-8">
-                  <AvatarImage src={user.photoURL || avatar?.imageUrl} alt={user.displayName || "Admin"} />
-                  <AvatarFallback>
-                    <User />
-                  </AvatarFallback>
-                </Avatar>
+              <Link href="/admin/profile" className="flex items-center gap-2 group">
+                 <div className="h-8 w-8 rounded-full bg-muted text-muted-foreground flex items-center justify-center">
+                   <User className="h-5 w-5" />
+                 </div>
                 <div className="flex flex-col group-data-[collapsible=icon]:hidden">
                   <span className="text-sm font-semibold">{user.displayName || user.email}</span>
-                   <span className="text-xs text-muted-foreground hover:underline">
+                   <span className="text-xs text-muted-foreground group-hover:underline">
                     View Profile
                   </span>
                 </div>
               </Link>
-               <Button variant="ghost" size="icon" onClick={handleLogout}>
+               <Button variant="ghost" size="icon" onClick={handleLogout} className="group-data-[collapsible=icon]:flex">
                   <LogOut className="h-4 w-4" />
                </Button>
             </div>

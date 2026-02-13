@@ -5,7 +5,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function formatCurrency(amount: number, currency: 'USD' | 'KSh') {
+export function formatCurrency(amount: number | undefined, currency: 'USD' | 'KSh') {
+  if (amount === undefined) {
+    return 'Ask for Price';
+  }
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: currency,

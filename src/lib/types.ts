@@ -29,7 +29,7 @@ export type Vehicle = {
   mileage: number;
   condition: 'New' | 'Used' | 'Damaged';
   images: VehicleImage[];
-  price: number;
+  price?: number;
   currency: 'USD' | 'KSh';
   status: 'Incoming' | 'Available' | 'Sold';
   inspectionStatus: 'Pending' | 'Passed' | 'Failed';
