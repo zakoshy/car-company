@@ -1,6 +1,6 @@
 'use client';
 
-import { Car } from 'lucide-react';
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 
@@ -12,7 +12,7 @@ type LogoProps = {
 export function Logo({ className, isLink = false }: LogoProps) {
   const content = (
     <>
-      <Car className="h-6 w-6 text-primary" />
+      <Image src="/logo1.png" alt="AL-ZIA TRADING CO.LTD Logo" width={32} height={32} />
       <span className="font-headline text-xl font-semibold whitespace-nowrap">AL-ZIA TRADING CO.LTD</span>
     </>
   );
