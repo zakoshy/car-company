@@ -8,6 +8,7 @@ import { ThemeToggle } from '@/components/theme-toggle';
 import {
   Sheet,
   SheetContent,
+  SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -62,6 +63,7 @@ export function SiteHeader() {
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px] flex flex-col p-0">
+              <SheetTitle className="sr-only">Main Menu</SheetTitle>
               <div className="p-6 border-b">
                 <Logo isLink={true} />
               </div>
