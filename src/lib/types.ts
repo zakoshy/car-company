@@ -18,7 +18,7 @@ export type Vehicle = {
   make: string;
   model: string;
   year: number;
-  vin: string;
+  vin?: string;
   referenceNumber: string;
   chassisNumber: string;
   drivetrain: '4x4' | '2WD' | 'AWD' | 'FWD' | 'RWD';

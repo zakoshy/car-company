@@ -79,7 +79,7 @@ export function VehicleDetailClient({ vehicleId }: { vehicleId: string }) {
     },
     { icon: Clipboard, label: 'Reference No', value: vehicle.referenceNumber },
     { icon: Fingerprint, label: 'Chassis No.', value: vehicle.chassisNumber },
-    { icon: Fingerprint, label: 'VIN', value: vehicle.vin },
+    ...(vehicle.vin ? [{ icon: Fingerprint, label: 'VIN', value: vehicle.vin }] : []),
     { icon: Car, label: 'Vehicle Type', value: vehicle.vehicleType },
     { icon: Calendar, label: 'Year', value: vehicle.year },
     { icon: Palette, label: 'Color', value: vehicle.color },

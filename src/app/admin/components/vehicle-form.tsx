@@ -60,7 +60,7 @@ const vehicleFormSchema = z.object({
   year: z.coerce.number().int().min(1900, 'Invalid year'),
   referenceNumber: z.string().min(1, 'Reference number is required'),
   chassisNumber: z.string().min(5, 'Chassis number is required.'),
-  vin: z.string().min(5, 'VIN is required.'),
+  vin: z.string().optional(),
   drivetrain: z.enum(['4x4', '2WD', 'AWD', 'FWD', 'RWD']),
   transmission: z.enum(['Automatic', 'Manual']),
   color: z.string().min(1, 'Color is required'),
@@ -383,7 +383,7 @@ export function VehicleForm({ vehicle }: { vehicle?: Vehicle }) {
             name="vin"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>VIN</FormLabel>
+                <FormLabel>VIN (Optional)</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
