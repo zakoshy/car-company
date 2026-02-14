@@ -58,7 +58,7 @@ const vehicleFormSchema = z.object({
   make: z.string().min(1, 'Make is required'),
   model: z.string().min(1, 'Model is required'),
   year: z.coerce.number().int().min(1900, 'Invalid year'),
-  referenceNumber: z.string().min(1, 'Reference number is required'),
+  referenceNumber: z.string().optional(),
   chassisNumber: z.string().min(5, 'Chassis number is required.'),
   vin: z.string().optional(),
   drivetrain: z.enum(['4x4', '2WD', 'AWD', 'FWD', 'RWD']),
@@ -357,7 +357,7 @@ export function VehicleForm({ vehicle }: { vehicle?: Vehicle }) {
             name="referenceNumber"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Reference Number</FormLabel>
+                <FormLabel>Reference Number (Optional)</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -371,19 +371,6 @@ export function VehicleForm({ vehicle }: { vehicle?: Vehicle }) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Chassis Number</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-           <FormField
-            control={form.control}
-            name="vin"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>VIN (Optional)</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -531,43 +518,6 @@ export function VehicleForm({ vehicle }: { vehicle?: Vehicle }) {
                 <FormControl>
                   <Input type="number" {...field} />
                 </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="price"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Price (Optional)</FormLabel>
-                <FormControl>
-                  <Input type="number" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="currency"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Currency</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="USD">USD</SelectItem>
-                    <SelectItem value="KSh">KSh</SelectItem>
-                  </SelectContent>
-                </Select>
                 <FormMessage />
               </FormItem>
             )}

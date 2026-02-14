@@ -77,7 +77,7 @@ export function VehicleDetailClient({ vehicleId }: { vehicleId: string }) {
       label: 'Make & Model',
       value: `${vehicle.make} ${vehicle.model}`,
     },
-    { icon: Clipboard, label: 'Reference No', value: vehicle.referenceNumber },
+    ...(vehicle.referenceNumber ? [{ icon: Clipboard, label: 'Reference No', value: vehicle.referenceNumber }] : []),
     { icon: Fingerprint, label: 'Chassis No.', value: vehicle.chassisNumber },
     ...(vehicle.vin ? [{ icon: Fingerprint, label: 'VIN', value: vehicle.vin }] : []),
     { icon: Car, label: 'Vehicle Type', value: vehicle.vehicleType },
@@ -100,7 +100,7 @@ export function VehicleDetailClient({ vehicleId }: { vehicleId: string }) {
     { icon: ShieldCheck, label: 'Inspection', value: vehicle.inspectionStatus },
   ];
 
-  const inquiryText = `Hello, I'm interested in the ${vehicle.year} ${vehicle.make} ${vehicle.model} (Ref: ${vehicle.referenceNumber}).`;
+  const inquiryText = `Hello, I'm interested in the ${vehicle.year} ${vehicle.make} ${vehicle.model}${vehicle.referenceNumber ? ` (Ref: ${vehicle.referenceNumber})` : ''}.`;
   const whatsappUrl = `https://wa.me/256776754426?text=${encodeURIComponent(inquiryText)}`;
 
 
