@@ -13,7 +13,7 @@ export function Logo({ className, isLink = false }: LogoProps) {
   const content = (
     <>
       <Image src="/logo1.jpg" alt="AL-ZIA AUTOCARE LTD Logo" width={80} height={50} className="rounded-md" />
-      <span className="font-headline text-sm md:text-xl font-semibold whitespace-nowrap group-data-[collapsible=icon]:hidden">
+      <span className="font-headline text-sm md:text-base font-semibold whitespace-nowrap group-data-[collapsible=icon]:hidden">
         AL-ZIA AUTOCARE LTD
       </span>
     </>
